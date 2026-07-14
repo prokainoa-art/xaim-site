@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>X-AIM — AI Aim Assist</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#050507;
+  --s1:#0b0b10;
+  --s2:#111118;
+  --s3:#181820;
+  --bdr:rgba(200,0,20,0.12);
+  --bdr2:rgba(200,0,20,0.28);
+  --red:#cc0011;
+  --red2:#ff2233;
+  --tx:#ddd8d4;
+  --tx2:#6a5558;
+  --tx3:#3a2a2e;
+  --r:8px;
+}
+
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--tx);
+  font-family:'Helvetica Neue',Arial,sans-serif;
+  font-size:15px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── NAV ─────────────────────────────── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;height:60px;
+  background:rgba(5,5,7,0.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--bdr);
+}
+.nav-logo{
+  display:flex;align-items:center;gap:8px;
+  text-decoration:none;
+}
+.nav-logo-x{
+  width:28px;height:28px;
+  border:1.5px solid var(--red);
+  border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:900;color:var(--red);
+  letter-spacing:-1px;
+}
+.nav-logo-text{
+  font-size:15px;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--tx);
+}
+.nav-logo-v{
+  font-size:9px;color:var(--red);font-weight:600;
+  letter-spacing:0.2em;margin-left:2px;
+  align-self:flex-start;margin-top:4px;
+}
+.nav-links{display:flex;align-items:center;gap:8px}
+.nav-link{
+  background:transparent;border:none;cursor:pointer;
+  color:var(--tx2);font-size:13px;letter-spacing:0.05em;
+  padding:6px 14px;border-radius:var(--r);
+  transition:color 0.15s;
+  font-family:inherit;
+  text-decoration:none;display:inline-flex;align-items:center;
+}
+.nav-link:hover,.nav-link.active{color:var(--tx)}
+.nav-cta{
+  background:var(--red);color:#fff;border:none;cursor:pointer;
+  font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;
+  padding:8px 18px;border-radius:var(--r);
+  transition:background 0.15s;font-family:inherit;
+}
+.nav-cta:hover{background:var(--red2)}
+
+/* ── HERO ────────────────────────────── */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+  padding:80px 40px 60px;text-align:center;
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(var(--bdr) 1px,transparent 1px),
+    linear-gradient(90deg,var(--bdr) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 80% 60% at 50% 50%,black,transparent);
+}
+.hero-glow{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-55%);
+  width:600px;height:300px;
+  background:radial-gradient(ellipse,rgba(180,0,20,0.08) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-eye{
+  position:relative;z-index:1;
+  font-size:11px;font-weight:600;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--red);margin-bottom:28px;
+  display:flex;align-items:center;gap:10px;
+}
+.hero-eye::before,.hero-eye::after{
+  content:'';display:block;width:40px;height:1px;background:var(--red);opacity:0.5;
+}
+.hero-title{
+  position:relative;z-index:1;
+  font-size:clamp(72px,12vw,140px);
+  font-weight:900;
+  letter-spacing:-0.04em;
+  line-height:0.9;
+  color:#fff;
+  text-transform:uppercase;
+  margin-bottom:4px;
+}
+.hero-title-aim{
+  color:var(--red);
+  display:inline-block;
+}
+.hero-sub{
+  position:relative;z-index:1;
+  font-size:clamp(15px,2vw,19px);
+  color:var(--tx2);
+  letter-spacing:0.02em;
+  margin-bottom:44px;
+  max-width:480px;
+}
+.hero-actions{
+  position:relative;z-index:1;
+  display:flex;gap:12px;justify-content:center;flex-wrap:wrap;
+}
+.btn-primary{
+  background:var(--red);color:#fff;border:none;cursor:pointer;
+  font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;
+  padding:14px 32px;border-radius:var(--r);
+  transition:background 0.15s,transform 0.1s;font-family:inherit;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.btn-primary:hover{background:var(--red2);transform:translateY(-1px)}
+.btn-primary:active{transform:translateY(0)}
+.btn-ghost{
+  background:transparent;color:var(--tx);
+  border:1px solid var(--bdr2);cursor:pointer;
+  font-size:13px;font-weight:500;letter-spacing:0.06em;
+  padding:14px 28px;border-radius:var(--r);
+  transition:border-color 0.15s,color 0.15s;font-family:inherit;
+}
+.btn-ghost:hover{border-color:var(--red);color:var(--red)}
+.hero-note{
+  position:relative;z-index:1;
+  margin-top:20px;font-size:12px;color:var(--tx3);
+  letter-spacing:0.05em;
+}
+
+/* ── SECTIONS ────────────────────────── */
+section{padding:100px 40px}
+.section-label{
+  font-size:10px;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--red);margin-bottom:14px;
+}
+.section-title{
+  font-size:clamp(28px,4vw,42px);font-weight:800;
+  letter-spacing:-0.02em;line-height:1.1;
+  color:#fff;margin-bottom:14px;
+  text-wrap:balance;
+}
+.section-sub{
+  font-size:16px;color:var(--tx2);max-width:480px;
+  margin-bottom:60px;
+}
+.center{text-align:center;align-items:center}
+.center .section-sub{margin-left:auto;margin-right:auto}
+
+/* ── FEATURES ────────────────────────── */
+.features{background:var(--s1)}
+.feat-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:1px;
+  border:1px solid var(--bdr);
+  border-radius:12px;overflow:hidden;
+}
+.feat-card{
+  background:var(--s2);
+  padding:32px 28px;
+  transition:background 0.15s;
+}
+.feat-card:hover{background:var(--s3)}
+.feat-icon{
+  width:36px;height:36px;border-radius:6px;
+  background:rgba(200,0,20,0.1);border:1px solid var(--bdr2);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:18px;
+}
+.feat-icon svg{width:16px;height:16px;stroke:var(--red);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.feat-title{font-size:14px;font-weight:700;letter-spacing:0.03em;color:#fff;margin-bottom:8px;text-transform:uppercase}
+.feat-desc{font-size:13px;color:var(--tx2);line-height:1.6}
+
+/* ── HOW ─────────────────────────────── */
+.how-steps{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:0;position:relative;
+}
+.how-steps::before{
+  content:'';position:absolute;top:24px;left:calc(12.5%);right:calc(12.5%);
+  height:1px;background:var(--bdr2);z-index:0;
+}
+.how-step{position:relative;z-index:1;padding:0 24px;text-align:center}
+.how-num{
+  width:48px;height:48px;border-radius:50%;
+  border:1px solid var(--bdr2);background:var(--s2);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 20px;
+  font-size:13px;font-weight:700;color:var(--red);
+  letter-spacing:0.05em;
+}
+.how-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em}
+.how-desc{font-size:13px;color:var(--tx2)}
+
+/* ── PRICING ─────────────────────────── */
+.pricing{background:var(--s1)}
+.price-card{
+  max-width:420px;margin:0 auto;
+  background:var(--s2);
+  border:1px solid var(--bdr2);
+  border-radius:16px;overflow:hidden;
+}
+.price-top{
+  padding:36px 36px 32px;
+  border-bottom:1px solid var(--bdr);
+}
+.price-badge{
+  display:inline-block;
+  font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;
+  background:rgba(200,0,20,0.15);color:var(--red);
+  border:1px solid rgba(200,0,20,0.3);
+  border-radius:4px;padding:4px 10px;margin-bottom:20px;
+}
+.price-name{font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--tx2);margin-bottom:12px}
+.price-amount{
+  font-size:52px;font-weight:900;color:#fff;letter-spacing:-0.03em;
+  line-height:1;margin-bottom:6px;
+}
+.price-amount span{font-size:22px;color:var(--tx2);font-weight:400}
+.price-note{font-size:13px;color:var(--tx2)}
+.price-feats{padding:28px 36px}
+.price-feat{
+  display:flex;align-items:center;gap:12px;
+  font-size:13px;color:var(--tx);
+  padding:10px 0;border-bottom:1px solid var(--bdr);
+}
+.price-feat:last-child{border-bottom:none}
+.price-feat svg{width:14px;height:14px;stroke:var(--red);fill:none;stroke-width:2;flex-shrink:0}
+.price-btn{
+  display:block;width:calc(100% - 48px);margin:4px 24px 24px;
+  background:var(--red);color:#fff;border:none;cursor:pointer;
+  font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;
+  padding:15px;border-radius:var(--r);
+  transition:background 0.15s;font-family:inherit;
+}
+.price-btn:hover{background:var(--red2)}
+
+/* ── TESTIMONIALS ───────────────────── */
+.testi-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:12px;
+}
+.testi-card{
+  background:var(--s1);border:1px solid var(--bdr);
+  border-radius:12px;padding:24px;
+}
+.testi-stars{color:var(--red);font-size:11px;letter-spacing:2px;margin-bottom:14px}
+.testi-text{font-size:14px;color:var(--tx2);line-height:1.7;margin-bottom:18px}
+.testi-name{font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--tx)}
+.testi-tag{font-size:11px;color:var(--tx3)}
+
+/* ── FOOTER ─────────────────────────── */
+footer{
+  padding:40px;display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid var(--bdr);flex-wrap:wrap;gap:16px;
+}
+.footer-left{font-size:12px;color:var(--tx3)}
+.footer-links{display:flex;gap:24px}
+.footer-link{font-size:12px;color:var(--tx3);text-decoration:none;transition:color 0.15s}
+.footer-link:hover{color:var(--red)}
+
+/* ── DASHBOARD ──────────────────────── */
+#page-dashboard{display:none}
+.dash-body{
+  padding-top:60px;min-height:100vh;background:var(--bg);
+}
+.dash-content{max-width:1100px;margin:0 auto;padding:40px 40px}
+.dash-user{display:flex;align-items:center;gap:16px;margin-bottom:36px}
+.dash-avatar{
+  width:52px;height:52px;border-radius:50%;
+  background:rgba(200,0,20,0.15);border:1px solid var(--bdr2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;font-weight:800;color:var(--red);
+}
+.dash-username{font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.01em}
+.dash-since{font-size:13px;color:var(--tx2)}
+
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.stat-card{
+  background:var(--s2);border:1px solid rgba(255,255,255,0.06);
+  border-radius:12px;padding:22px 24px;text-align:center;
+}
+.stat-label{
+  font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--tx2);margin-bottom:14px;
+}
+.stat-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:13px;font-weight:600;
+  padding:6px 14px;border-radius:20px;letter-spacing:0.03em;
+}
+.badge-active{background:rgba(0,180,60,0.12);color:#2dcc6f;border:1px solid rgba(0,180,60,0.2)}
+.badge-lifetime{background:rgba(130,0,220,0.12);color:#a855f7;border:1px solid rgba(130,0,220,0.2)}
+.badge-locked{background:rgba(20,100,220,0.12);color:#60a5fa;border:1px solid rgba(20,100,220,0.2)}
+.badge-dot{width:7px;height:7px;border-radius:50%}
+.badge-active .badge-dot{background:#2dcc6f}
+
+.dash-card{
+  background:var(--s2);border:1px solid rgba(255,255,255,0.06);
+  border-radius:12px;padding:24px;margin-bottom:16px;
+}
+.dash-card-title{
+  display:flex;align-items:center;gap:10px;
+  font-size:13px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;
+  color:#fff;margin-bottom:20px;
+}
+.dash-card-title svg{width:16px;height:16px;stroke:var(--red);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+
+.key-status{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.key-dot{width:8px;height:8px;border-radius:50%;background:#2dcc6f}
+.key-status-text{font-size:12px;font-weight:600;color:#2dcc6f;letter-spacing:0.06em;text-transform:uppercase}
+.key-hint{font-size:13px;color:var(--tx2);margin-bottom:16px}
+
+.key-field-wrap{
+  display:flex;align-items:center;gap:8px;
+}
+.key-field{
+  flex:1;background:var(--s3);border:1px solid rgba(255,255,255,0.07);
+  border-radius:var(--r);padding:12px 16px;
+  font-family:'Consolas',monospace;font-size:14px;
+  color:var(--tx);letter-spacing:0.05em;
+  cursor:default;overflow:hidden;white-space:nowrap;
+}
+.key-action{
+  width:38px;height:38px;border-radius:var(--r);
+  background:var(--s3);border:1px solid rgba(255,255,255,0.07);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:background 0.15s,border-color 0.15s;flex-shrink:0;
+}
+.key-action:hover{background:var(--s1);border-color:var(--red)}
+.key-action svg{width:14px;height:14px;stroke:var(--tx2);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke 0.15s}
+.key-action:hover svg{stroke:var(--red)}
+
+.bottom-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+.hwid-current{
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:20px;
+}
+.hwid-hash{
+  flex:1;background:var(--s3);border:1px solid rgba(255,255,255,0.07);
+  border-radius:var(--r);padding:10px 14px;
+  font-family:'Consolas',monospace;font-size:13px;color:var(--tx2);
+}
+.hw-label{font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--tx2);margin-bottom:8px}
+
+.cooldown-bar-wrap{margin-bottom:20px}
+.cooldown-label{display:flex;justify-content:space-between;font-size:11px;color:var(--tx2);margin-bottom:6px}
+.cooldown-bar{height:4px;background:var(--s3);border-radius:2px;overflow:hidden}
+.cooldown-fill{height:100%;border-radius:2px;background:var(--red);width:78%}
+
+.btn-reset{
+  display:block;width:100%;
+  background:rgba(230,130,0,0.12);color:#f59e0b;
+  border:1px solid rgba(230,130,0,0.25);
+  border-radius:var(--r);padding:11px;
+  font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
+  cursor:pointer;font-family:inherit;transition:background 0.15s;
+}
+.btn-reset:hover{background:rgba(230,130,0,0.2)}
+
+.dl-center{text-align:center;padding:12px 0}
+.dl-icon{
+  width:56px;height:56px;margin:0 auto 16px;
+  background:rgba(20,100,220,0.12);border:1px solid rgba(20,100,220,0.2);
+  border-radius:10px;display:flex;align-items:center;justify-content:center;
+}
+.dl-icon svg{width:28px;height:28px;fill:rgba(20,100,220,0.8)}
+.dl-title{font-size:16px;font-weight:700;color:#fff;margin-bottom:6px}
+.dl-sub{font-size:13px;color:var(--tx2);margin-bottom:20px}
+.btn-dl{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(0,180,60,0.15);color:#2dcc6f;
+  border:1px solid rgba(0,180,60,0.25);
+  border-radius:var(--r);padding:12px 24px;
+  font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;
+  cursor:pointer;font-family:inherit;transition:background 0.15s;
+}
+.btn-dl:hover{background:rgba(0,180,60,0.25)}
+.dl-note{font-size:11px;color:var(--tx3);margin-top:10px}
+
+.dash-nav-tabs{display:flex;align-items:center;gap:2px}
+.dash-tab{
+  background:transparent;border:none;cursor:pointer;
+  color:var(--tx2);font-size:13px;padding:8px 16px;
+  border-bottom:2px solid transparent;transition:color 0.15s,border-color 0.15s;
+  font-family:inherit;
+}
+.dash-tab.active{color:#fff;border-bottom-color:var(--red)}
+.dash-user-btn{
+  background:var(--s2);border:1px solid rgba(255,255,255,0.06);
+  border-radius:var(--r);padding:6px 12px;
+  font-size:13px;color:var(--tx);cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;gap:6px;
+}
+.toast{
+  position:fixed;bottom:24px;right:24px;
+  background:var(--s3);border:1px solid var(--bdr2);
+  border-radius:var(--r);padding:12px 18px;
+  font-size:13px;color:var(--tx);
+  transform:translateY(60px);opacity:0;
+  transition:all 0.2s;z-index:999;
+  pointer-events:none;
+}
+.toast.show{transform:translateY(0);opacity:1}
+</style>
+
+<!-- TOAST -->
+<div class="toast" id="toast">Clé copiée</div>
+
+<!-- ══════════════════════════════ LANDING ══════════════════════════════ -->
+<div id="page-landing">
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#" onclick="return false">
+    <div class="nav-logo-x">X</div>
+    <span class="nav-logo-text">X-AIM</span>
+    <span class="nav-logo-v">V2</span>
+  </a>
+  <div class="nav-links">
+    <button class="nav-link" onclick="scrollTo('#features')">Features</button>
+    <button class="nav-link" onclick="scrollTo('#pricing')">Pricing</button>
+    <button class="nav-link" onclick="showDash()">Login</button>
+    <button class="nav-cta" onclick="scrollTo('#pricing')">Buy Now</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-eye">Fortnite AI Aimassist</div>
+  <h1 class="hero-title">X-<span class="hero-title-aim">AIM</span></h1>
+  <p class="hero-sub" style="margin-top:20px">Neural network detection. reWASD integration. 240 FPS tracking. One lifetime license.</p>
+  <div class="hero-actions">
+    <button class="btn-primary" onclick="scrollTo('#pricing')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Get Lifetime Access
+    </button>
+    <button class="btn-ghost" onclick="scrollTo('#features')">See Features</button>
+  </div>
+  <p class="hero-note">One-time payment · HWID locked · Instant delivery</p>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div style="text-align:center;margin-bottom:56px">
+    <div class="section-label">Technologie</div>
+    <h2 class="section-title" style="color:#fff">Tout ce dont tu as besoin</h2>
+    <p class="section-sub" style="margin:0 auto;color:var(--tx2)">Conçu pour Fortnite. Optimisé pour le compétitif.</p>
+  </div>
+  <div class="feat-grid" style="max-width:960px;margin:0 auto">
+    <div class="feat-card">
+      <div class="feat-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+      </div>
+      <div class="feat-title">AI Detection YOLO11</div>
+      <p class="feat-desc">Réseau de neurones YOLO11s entraîné sur Fortnite. Détection fluide à 30 fps, tracking à 240 fps.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <div class="feat-title">240 FPS Tracking</div>
+      <p class="feat-desc">Boucle principale à 240 Hz avec prédiction de vélocité. Aucun lag perceptible entre la cible et le stick.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      </div>
+      <div class="feat-title">reWASD Intégré</div>
+      <p class="feat-desc">Configuration automatique du profil reWASD. Courbe S-curve calibrée, dead zone et scale optimisés.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      </div>
+      <div class="feat-title">Mode ADS Automatique</div>
+      <p class="feat-desc">Détection RMB en temps réel. Paramètres boostés automatiquement en visée — tracking serré sans friction.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      </div>
+      <div class="feat-title">Overlay Temps Réel</div>
+      <p class="feat-desc">HUD transparent affichant le statut, les cibles détectées et la cible verrouillée. Désactivable en un clic.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="feat-title">HWID Lock & Sécurité</div>
+      <p class="feat-desc">Licence liée à ta machine. Clé partagée = ban automatique. Accès sécurisé et réservé à un seul utilisateur.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section style="padding:100px 40px;text-align:center">
+  <div class="section-label" style="text-align:center">Process</div>
+  <h2 class="section-title" style="color:#fff;text-align:center;margin-bottom:56px">En route en 3 étapes</h2>
+  <div class="how-steps" style="max-width:760px;margin:0 auto">
+    <div class="how-step">
+      <div class="how-num">01</div>
+      <div class="how-title">Achète</div>
+      <p class="how-desc">Paiement sécurisé. Ta clé unique arrive instantanément par email.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">02</div>
+      <div class="how-title">Télécharge</div>
+      <p class="how-desc">Lance le client depuis ton dashboard. Installation en quelques secondes.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">03</div>
+      <div class="how-title">Domine</div>
+      <p class="how-desc">Entre ta clé. Appuie sur F1. L'IA fait le reste.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div style="text-align:center;margin-bottom:48px">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title" style="color:#fff">Un seul plan. Une seule paiement.</h2>
+  </div>
+  <div class="price-card">
+    <div class="price-top">
+      <div class="price-badge">Le plus populaire</div>
+      <div class="price-name">Licence à vie</div>
+      <div class="price-amount"><span>$</span>29<span>.99</span></div>
+      <div class="price-note">Paiement unique — accès à vie</div>
+    </div>
+    <div class="price-feats">
+      <div class="price-feat">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        Toutes les fonctionnalités incluses
+      </div>
+      <div class="price-feat">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        Toutes les mises à jour futures
+      </div>
+      <div class="price-feat">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        Mode ADS automatique
+      </div>
+      <div class="price-feat">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        Support Discord prioritaire
+      </div>
+      <div class="price-feat">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        Clé liée à ta machine — 1 seul appareil
+      </div>
+    </div>
+    <button class="price-btn" onclick="showDash()">Commencer maintenant</button>
+    <p style="text-align:center;font-size:11px;color:var(--tx3);padding-bottom:16px;letter-spacing:0.05em">Livraison instantanée · Paiement sécurisé</p>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section style="padding:100px 40px">
+  <div style="text-align:center;margin-bottom:48px">
+    <div class="section-label">Avis</div>
+    <h2 class="section-title" style="color:#fff">Ce que disent les joueurs</h2>
+  </div>
+  <div class="testi-grid" style="max-width:960px;margin:0 auto">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Vraiment impressionnant. Le tracking est smooth, zero saccade. Le mode ADS c'est une autre dimension."</p>
+      <div class="testi-name">Vers.</div>
+      <div class="testi-tag">Discord Community</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Setup en 5 minutes, ça marche direct. J'ai pris 3 kills en ranked que j'aurais jamais eu avant. Ouf."</p>
+      <div class="testi-name">F2C</div>
+      <div class="testi-tag">Discord Community</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Le meilleur outil que j'ai utilisé. Le support est réactif et la qualité est là. 10/10 sans hésiter."</p>
+      <div class="testi-name">m.langton</div>
+      <div class="testi-tag">Discord Community</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"J'étais sceptique au départ mais franchement impressionné. Ça reste discret et efficace. Top."</p>
+      <div class="testi-name">doyerverk</div>
+      <div class="testi-tag">Discord Community</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">© 2025 X-AIM. Tous droits réservés.</div>
+  <div class="footer-links">
+    <a class="footer-link" href="#">Discord</a>
+    <a class="footer-link" href="#">CGU</a>
+    <a class="footer-link" href="#">Contact</a>
+  </div>
+</footer>
+
+</div><!-- /page-landing -->
+
+
+<!-- ══════════════════════════════ DASHBOARD ══════════════════════════════ -->
+<div id="page-dashboard">
+
+<!-- DASH NAV -->
+<nav>
+  <a class="nav-logo" href="#" onclick="showLanding();return false">
+    <div class="nav-logo-x">X</div>
+    <span class="nav-logo-text">X-AIM</span>
+    <span class="nav-logo-v">V2</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:0">
+    <div class="dash-nav-tabs">
+      <button class="dash-tab active">Dashboard</button>
+      <button class="dash-tab">Guide</button>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div class="dash-user-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      TunaPF
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </div>
+</nav>
+
+<div class="dash-body">
+  <div class="dash-content">
+
+    <!-- User -->
+    <div class="dash-user">
+      <div class="dash-avatar">T</div>
+      <div>
+        <div class="dash-username">TunaPF</div>
+        <div class="dash-since">Membre depuis juillet 2025</div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-label">License Status</div>
+        <div class="stat-badge badge-active">
+          <div class="badge-dot"></div>
+          Active
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">License Type</div>
+        <div class="stat-badge badge-lifetime">∞ Lifetime</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Device Status</div>
+        <div class="stat-badge badge-locked">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Locked
+        </div>
+      </div>
+    </div>
+
+    <!-- API Key -->
+    <div class="dash-card">
+      <div class="dash-card-title">
+        <svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+        Application API Key
+      </div>
+      <div class="key-status">
+        <div class="key-dot"></div>
+        <div class="key-status-text">Active &amp; Ready</div>
+        <span style="font-size:13px;color:var(--tx2);font-weight:400;text-transform:none;letter-spacing:0">— Client access enabled</span>
+      </div>
+      <p class="key-hint">Ta clé API unique. Ne la partage pas — liée à ta machine uniquement.</p>
+      <div class="key-field-wrap">
+        <div class="key-field" id="key-display">••••••••••••••••••••••••••••••••71d2eab8</div>
+        <button class="key-action" onclick="copyKey()" title="Copier">
+          <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        </button>
+        <button class="key-action" onclick="toggleKey()" title="Afficher" id="eye-btn">
+          <svg viewBox="0 0 24 24" id="eye-icon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom Row -->
+    <div class="bottom-row">
+
+      <!-- HWID -->
+      <div class="dash-card" style="margin-bottom:0">
+        <div class="dash-card-title">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Device Lock (HWID)
+        </div>
+        <p style="font-size:13px;color:var(--tx2);margin-bottom:16px">Ton compte est lié à un seul appareil. Reset si tu changes de PC.</p>
+        <div class="hw-label">Current Status</div>
+        <div class="hwid-current">
+          <div class="stat-badge badge-locked" style="font-size:12px">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Device Locked
+          </div>
+        </div>
+        <div class="hwid-hash">db133d9ef25c9413...</div>
+        <div style="height:14px"></div>
+        <div class="cooldown-bar-wrap">
+          <div class="cooldown-label">
+            <span>Reset cooldown</span>
+            <span style="color:var(--red);font-weight:600">Disponible</span>
+          </div>
+          <div class="cooldown-bar"><div class="cooldown-fill" style="width:100%"></div></div>
+        </div>
+        <button class="btn-reset" onclick="resetHwid()">
+          ↺ Reset Device Lock
+        </button>
+      </div>
+
+      <!-- Download -->
+      <div class="dash-card" style="margin-bottom:0">
+        <div class="dash-card-title">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Desktop Application
+        </div>
+        <div class="dl-center">
+          <div class="dl-icon">
+            <svg viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 12.402l35.687-4.86.016 34.423-35.67.203zm35.67 33.529l.028 34.453L.028 75.48.026 45.7zm4.326-39.025L87.314 0v41.527l-47.318.376zm47.329 39.349l-.011 41.34-47.318-6.678-.066-34.739z" fill="#60a5fa"/>
+            </svg>
+          </div>
+          <div class="dl-title">Prêt à télécharger</div>
+          <p class="dl-sub">Dernière version de X-AIM V2 pour Windows.</p>
+          <button class="btn-dl">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Télécharger le client
+          </button>
+          <p class="dl-note">🛡 Téléchargement sécurisé · Windows 10/11</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div><!-- /page-dashboard -->
+
+<script>
+const FULL_KEY = 'xaim-a3f2-b1c9-d4e8-f72071d2eab8';
+let keyVisible = false;
+
+function showDash(){
+  document.getElementById('page-landing').style.display='none';
+  document.getElementById('page-dashboard').style.display='block';
+  window.scrollTo(0,0);
+}
+function showLanding(){
+  document.getElementById('page-dashboard').style.display='none';
+  document.getElementById('page-landing').style.display='block';
+  window.scrollTo(0,0);
+}
+function scrollTo(id){
+  document.querySelector(id).scrollIntoView({behavior:'smooth'});
+}
+function toggleKey(){
+  keyVisible=!keyVisible;
+  const d=document.getElementById('key-display');
+  d.textContent=keyVisible ? FULL_KEY : '••••••••••••••••••••••••••••••••71d2eab8';
+}
+function copyKey(){
+  navigator.clipboard.writeText(FULL_KEY).catch(()=>{});
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+function resetHwid(){
+  const btn=document.querySelector('.btn-reset');
+  btn.textContent='Reset en cours...';
+  btn.disabled=true;
+  setTimeout(()=>{
+    btn.textContent='↺ Reset Device Lock';
+    btn.disabled=false;
+    const t=document.getElementById('toast');
+    t.textContent='HWID réinitialisé';
+    t.classList.add('show');
+    setTimeout(()=>{t.classList.remove('show');t.textContent='Clé copiée';},2200);
+  },1400);
+}
+</script>
