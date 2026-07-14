@@ -5,485 +5,477 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>X-AIM</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#08080c;
-  --s1:#0e0e14;
-  --s2:#14141c;
-  --red:#cc0011;
-  --red2:#ff2233;
-  --tx:#e2ddd9;
-  --tx2:#6b5f62;
-  --bdr:rgba(204,0,17,0.15);
-  --bdr2:rgba(204,0,17,0.3);
+  --bg:#07070a;--panel:#0d0d12;--panel2:#121218;
+  --red:#c8001a;--red-h:#e8001e;--red-glow:rgba(200,0,26,.18);
+  --txt:#dedad6;--muted:#5a5058;--border:rgba(255,255,255,.06);
+  --border-red:rgba(200,0,26,.28);
 }
-html,body{height:100%;font-family:'Helvetica Neue',Arial,sans-serif;-webkit-font-smoothing:antialiased}
-body{background:var(--bg);color:var(--tx);font-size:15px}
+html,body{height:100%;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--txt);font-size:15px;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer}
 
-/* ── NAV ── */
-nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  height:52px;
-  display:flex;align-items:center;
-  padding:0 32px;
-  background:rgba(8,8,12,0.9);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid rgba(255,255,255,0.05);
+/* ─── NAV ─── */
+.nav{
+  position:fixed;inset:0 0 auto 0;height:50px;z-index:200;
+  display:flex;align-items:center;padding:0 28px;gap:0;
+  background:rgba(7,7,10,.88);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
 }
-.nav-left{display:flex;align-items:center;gap:28px;flex:1}
-.nav-logo{display:flex;align-items:center;gap:8px;text-decoration:none;cursor:pointer}
-.nav-logo-icon{width:24px;height:24px;border:1.5px solid var(--red);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:var(--red)}
-.nav-logo-name{font-size:14px;font-weight:800;letter-spacing:2px;color:#fff}
-.nav-links{display:flex;gap:4px}
-.nav-link{
-  display:flex;align-items:center;gap:6px;
-  padding:6px 12px;border-radius:6px;
-  font-size:13px;color:var(--tx2);
-  text-decoration:none;cursor:pointer;
-  transition:all .15s;background:none;border:none;
+.nav-logo{display:flex;align-items:center;gap:9px;margin-right:28px}
+.nav-logo-box{
+  width:22px;height:22px;border:1.5px solid var(--red);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:900;color:var(--red);letter-spacing:0;
 }
-.nav-link:hover{background:rgba(255,255,255,0.05);color:var(--tx)}
-.nav-link.active{background:rgba(255,255,255,0.07);color:var(--tx)}
+.nav-logo-txt{font-size:13px;font-weight:800;letter-spacing:2.5px;color:#fff}
+.nav-links{display:flex;gap:2px;flex:1}
+.nav-a{
+  padding:5px 11px;border-radius:6px;font-size:13px;color:var(--muted);
+  background:none;border:none;transition:color .12s,background .12s;
+}
+.nav-a:hover,.nav-a.on{background:rgba(255,255,255,.05);color:var(--txt)}
 .nav-right{display:flex;align-items:center;gap:8px}
-.nav-user{
-  display:flex;align-items:center;gap:8px;
-  padding:6px 12px;border-radius:6px;
-  font-size:13px;color:var(--tx2);
-  cursor:pointer;transition:all .15s;
-  background:none;border:none;
-}
-.nav-user:hover{background:rgba(255,255,255,0.05);color:var(--tx)}
-.nav-user-dot{width:7px;height:7px;background:var(--red);border-radius:50%}
-.nav-buy{
-  background:var(--red);color:#fff;
-  padding:7px 16px;border-radius:6px;
-  font-size:13px;font-weight:700;letter-spacing:.5px;
-  text-decoration:none;border:none;cursor:pointer;
-  transition:all .15s;
-}
-.nav-buy:hover{background:var(--red2)}
+#nav-out{display:flex;align-items:center;gap:6px}
+#nav-in{display:none;align-items:center;gap:6px}
+.nav-ghost{padding:5px 13px;border-radius:6px;font-size:13px;color:var(--muted);background:none;border:none;transition:all .12s}
+.nav-ghost:hover{background:rgba(255,255,255,.05);color:var(--txt)}
+.nav-pill{padding:6px 15px;border-radius:6px;font-size:13px;font-weight:700;letter-spacing:.4px;color:#fff;background:var(--red);border:none;transition:background .12s}
+.nav-pill:hover{background:var(--red-h)}
+.nav-user{display:flex;align-items:center;gap:7px;padding:5px 11px;border-radius:6px;font-size:13px;color:var(--muted);background:none;border:none;transition:all .12s}
+.nav-user:hover{background:rgba(255,255,255,.05);color:var(--txt)}
+.nav-dot{width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0}
 
-/* ── PAGES ── */
-.page{display:none;min-height:100vh;width:100%}
-.page.active{display:flex}
+/* ─── PAGES ─── */
+.pg{display:none;min-height:100vh;padding-top:50px}
+.pg.show{display:flex}
 
-/* ── HOME ── */
-.home{
-  width:100%;
-  flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;padding:52px 24px 0;
-  position:relative;overflow:hidden;
-}
-.home-glow{
-  position:absolute;
-  width:600px;height:600px;
-  background:radial-gradient(circle,rgba(180,0,15,0.12) 0%,transparent 65%);
-  top:50%;left:50%;transform:translate(-50%,-55%);
-  pointer-events:none;
-}
-.home-title{
-  font-size:clamp(72px,10vw,110px);
-  font-weight:900;letter-spacing:-3px;line-height:1;
-  position:relative;z-index:1;
-  margin-bottom:16px;
-}
-.home-title span{color:var(--red)}
-.home-sub{
-  font-size:15px;color:var(--tx2);
-  margin-bottom:36px;position:relative;z-index:1;
-  letter-spacing:.3px;
-}
-.btn-main{
-  display:inline-flex;align-items:center;gap:8px;
-  background:var(--red);color:#fff;
-  padding:12px 28px;border-radius:8px;
-  font-size:14px;font-weight:700;letter-spacing:.5px;
-  text-decoration:none;border:none;cursor:pointer;
-  transition:all .15s;position:relative;z-index:1;
-}
-.btn-main:hover{background:var(--red2);box-shadow:0 0 24px rgba(204,0,17,0.35)}
-.home-hint{font-size:12px;color:var(--tx2);margin-top:16px;opacity:.6;position:relative;z-index:1}
-.home-hint a{color:var(--tx2);text-decoration:underline;cursor:pointer}
+/* ─── HOME ─── */
+#pg-home{flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
+.home-glow{position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,var(--red-glow) 0%,transparent 68%);top:50%;left:50%;transform:translate(-50%,-54%);pointer-events:none}
+.home-eyebrow{font-size:11px;letter-spacing:3px;color:var(--red);font-weight:700;margin-bottom:18px;position:relative}
+.home-h1{font-size:clamp(80px,11vw,120px);font-weight:900;letter-spacing:-4px;line-height:.95;position:relative;margin-bottom:18px}
+.home-h1 em{color:var(--red);font-style:normal}
+.home-sub{font-size:15px;color:var(--muted);margin-bottom:40px;position:relative;letter-spacing:.2px;line-height:1.5}
+.home-cta{position:relative}
+.btn-red{display:inline-flex;align-items:center;gap:8px;padding:13px 30px;border-radius:8px;font-size:14px;font-weight:700;letter-spacing:.4px;color:#fff;background:var(--red);border:none;transition:background .12s,box-shadow .12s}
+.btn-red:hover{background:var(--red-h);box-shadow:0 0 28px var(--red-glow)}
+.btn-red:disabled{opacity:.4;pointer-events:none}
+.home-hint{font-size:12px;color:var(--muted);margin-top:18px;position:relative;opacity:.7}
+.home-hint a{border-bottom:1px solid rgba(255,255,255,.15);padding-bottom:1px;cursor:pointer;transition:color .12s}
+.home-hint a:hover{color:var(--txt)}
 
-/* ── LOGIN PAGE ── */
-.login-wrap{
-  width:100%;padding-top:52px;
-  align-items:center;justify-content:center;
+/* ─── AUTH / PRICING BOX ─── */
+.box-wrap{width:100%;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+.box{background:var(--panel);border:1px solid var(--border-red);border-radius:14px;width:100%;max-width:420px;padding:40px 36px;text-align:center}
+.box-logo{font-size:20px;font-weight:900;letter-spacing:1px;margin-bottom:6px}
+.box-logo em{color:var(--red);font-style:normal}
+.box-desc{font-size:13px;color:var(--muted);margin-bottom:30px;line-height:1.5}
+.field{text-align:left;margin-bottom:14px}
+.field-label{font-size:10px;letter-spacing:2.5px;color:var(--muted);font-weight:700;margin-bottom:8px;display:block}
+.field-input{
+  width:100%;background:var(--bg);border:1px solid var(--border-red);
+  border-radius:8px;padding:12px 14px;color:var(--txt);
+  font-size:14px;font-family:monospace;letter-spacing:2px;text-align:center;
+  outline:none;transition:border-color .15s;
 }
-.login-box{
-  background:var(--s1);
-  border:1px solid var(--bdr2);
-  border-radius:12px;
-  padding:40px 36px;
-  width:100%;max-width:400px;
-  text-align:center;
-}
-.login-title{font-size:22px;font-weight:800;letter-spacing:-0.5px;margin-bottom:6px}
-.login-title span{color:var(--red)}
-.login-desc{font-size:13px;color:var(--tx2);margin-bottom:28px}
-.form-label{display:block;text-align:left;font-size:11px;letter-spacing:2px;color:var(--tx2);font-weight:700;margin-bottom:8px}
-.form-input{
-  width:100%;background:var(--bg);border:1px solid var(--bdr2);
-  border-radius:8px;padding:12px 14px;
-  color:var(--tx);font-size:14px;font-family:monospace;
-  letter-spacing:2px;text-align:center;outline:none;
-  transition:border-color .15s;
-}
-.form-input:focus{border-color:var(--red)}
-.form-input::placeholder{color:var(--tx2);opacity:.4;letter-spacing:1px}
-.form-btn{
-  width:100%;margin-top:16px;padding:13px;
-  background:var(--red);color:#fff;border:none;
-  border-radius:8px;font-size:14px;font-weight:700;
-  letter-spacing:1px;cursor:pointer;transition:all .15s;
-}
-.form-btn:hover{background:var(--red2)}
-.form-btn:disabled{opacity:.4;cursor:not-allowed}
-.form-status{min-height:18px;font-size:12px;margin-top:12px;color:var(--red2)}
-.form-status.ok{color:#4caf50}
-.login-sep{display:flex;align-items:center;gap:10px;margin:24px 0;color:var(--tx2);font-size:12px}
-.login-sep::before,.login-sep::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.06)}
-.login-alt{font-size:13px;color:var(--tx2)}
-.login-alt a{color:var(--red);text-decoration:none;font-weight:600;cursor:pointer}
-.login-alt a:hover{color:var(--red2)}
+.field-input:focus{border-color:var(--red)}
+.field-input::placeholder{color:var(--muted);opacity:.45;letter-spacing:1px}
+.box-btn{width:100%;margin-top:6px;padding:13px;border-radius:8px;font-size:14px;font-weight:700;letter-spacing:.8px;color:#fff;background:var(--red);border:none;transition:background .12s}
+.box-btn:hover{background:var(--red-h)}
+.box-btn:disabled{opacity:.4;cursor:not-allowed}
+.box-status{min-height:16px;font-size:12px;margin-top:11px}
+.err{color:var(--red-h)}.ok{color:#4caf50}
+.sep{display:flex;align-items:center;gap:10px;margin:22px 0;font-size:12px;color:var(--muted)}
+.sep::before,.sep::after{content:'';flex:1;height:1px;background:var(--border)}
+.box-alt{font-size:13px;color:var(--muted)}
+.box-alt a{color:var(--red);font-weight:600;cursor:pointer}
+.box-alt a:hover{color:var(--red-h)}
+.box-back{margin-top:18px}
+.link-back{font-size:13px;color:var(--muted);background:none;border:none;cursor:pointer;transition:color .12s}
+.link-back:hover{color:var(--txt)}
 
-/* ── DASHBOARD ── */
-.dash-wrap{width:100%;padding-top:52px;flex-direction:column;align-items:center}
-.dash-inner{width:100%;max-width:860px;padding:48px 24px}
-.dash-greeting{font-size:26px;font-weight:800;letter-spacing:-0.5px;margin-bottom:4px}
-.dash-greeting span{color:var(--red)}
-.dash-sub{font-size:13px;color:var(--tx2);margin-bottom:40px}
-
-.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-.dash-card{background:var(--s1);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:24px}
-.dash-card.full{grid-column:1/-1}
-.dash-card-label{font-size:10px;letter-spacing:3px;color:var(--tx2);font-weight:700;margin-bottom:16px}
-.dash-card-val{font-size:28px;font-weight:900;letter-spacing:-1px;line-height:1}
-.status-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:1px;margin-top:8px}
-.pill-green{background:rgba(76,175,80,0.12);color:#4caf50;border:1px solid rgba(76,175,80,0.25)}
-.pill-red{background:rgba(204,0,17,0.12);color:var(--red2);border:1px solid var(--bdr2)}
-
-.key-row{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:12px 14px}
-.key-val{flex:1;font-family:monospace;font-size:13px;letter-spacing:2px;color:var(--tx)}
-.key-val.masked{color:var(--tx2);letter-spacing:4px}
-.key-actions{display:flex;gap:6px}
-.key-btn{background:var(--s2);border:1px solid rgba(255,255,255,0.07);border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--tx2);cursor:pointer;transition:all .15s}
-.key-btn:hover{color:var(--tx);border-color:rgba(255,255,255,0.14)}
-
-.dl-btn{
-  display:inline-flex;align-items:center;gap:10px;
-  background:var(--red);color:#fff;
-  padding:13px 24px;border-radius:8px;
-  font-size:14px;font-weight:700;letter-spacing:.5px;
-  text-decoration:none;border:none;cursor:pointer;
-  transition:all .15s;
+/* ─── PRICING ─── */
+#pg-pricing{flex-direction:column;align-items:center;padding:80px 24px 60px}
+.pricing-head{text-align:center;margin-bottom:40px}
+.pricing-head h2{font-size:30px;font-weight:800;letter-spacing:-1px;margin-bottom:8px}
+.pricing-head h2 em{color:var(--red);font-style:normal}
+.pricing-head p{font-size:14px;color:var(--muted)}
+.p-card{
+  background:var(--panel);border:1px solid var(--border-red);border-radius:16px;
+  padding:40px;width:100%;max-width:400px;text-align:center;position:relative;
 }
-.dl-btn:hover{background:var(--red2);box-shadow:0 0 20px rgba(204,0,17,0.3)}
-.version-note{font-size:12px;color:var(--tx2);margin-top:10px}
-
-/* ── PRICING PAGE ── */
-.pricing-wrap{width:100%;padding:80px 24px;flex-direction:column;align-items:center;justify-content:center}
-.pricing-title{font-size:32px;font-weight:800;letter-spacing:-1px;text-align:center;margin-bottom:8px}
-.pricing-title span{color:var(--red)}
-.pricing-sub{font-size:14px;color:var(--tx2);text-align:center;margin-bottom:40px}
-.pricing-card{
-  background:var(--s1);border:1px solid var(--bdr2);
-  border-radius:16px;padding:40px;
-  width:100%;max-width:400px;text-align:center;
-  position:relative;
+.p-badge{
+  position:absolute;top:-11px;left:50%;transform:translateX(-50%);
+  background:var(--red);color:#fff;font-size:9px;font-weight:800;
+  letter-spacing:2.5px;padding:3px 13px;border-radius:20px;white-space:nowrap;
 }
-.pricing-badge{
-  position:absolute;top:-12px;left:50%;transform:translateX(-50%);
-  background:var(--red);color:#fff;
-  font-size:10px;font-weight:800;letter-spacing:2px;
-  padding:4px 14px;border-radius:20px;white-space:nowrap;
+.p-type{font-size:14px;color:var(--muted);font-weight:600;margin-bottom:18px}
+.p-price{font-size:66px;font-weight:900;letter-spacing:-3px;line-height:1}
+.p-price sup{font-size:22px;vertical-align:top;margin-top:14px;display:inline-block;font-weight:700}
+.p-once{font-size:12px;color:var(--muted);margin:8px 0 28px}
+.p-features{text-align:left;display:flex;flex-direction:column;gap:9px;margin-bottom:30px}
+.p-feat{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--txt)}
+.p-feat-check{color:var(--red);font-weight:900;font-size:14px;width:14px;flex-shrink:0}
+.p-cta{
+  display:block;width:100%;padding:14px;border-radius:8px;
+  font-size:15px;font-weight:700;letter-spacing:.4px;
+  color:#fff;background:var(--red);border:none;cursor:pointer;
+  transition:background .12s,box-shadow .12s;text-align:center;
 }
-.pricing-name{font-size:16px;font-weight:700;margin-bottom:20px;color:var(--tx2)}
-.pricing-amount{font-size:64px;font-weight:900;letter-spacing:-2px;line-height:1}
-.pricing-amount sup{font-size:24px;vertical-align:top;margin-top:12px;display:inline-block}
-.pricing-once{font-size:12px;color:var(--tx2);margin:8px 0 28px}
-.pricing-features{text-align:left;display:flex;flex-direction:column;gap:10px;margin-bottom:32px}
-.pf{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--tx)}
-.pf-check{color:var(--red);font-size:15px;font-weight:900;width:16px;flex-shrink:0}
-.pricing-cta{
-  display:block;width:100%;padding:14px;
-  background:var(--red);color:#fff;border:none;
-  border-radius:8px;font-size:15px;font-weight:700;
-  letter-spacing:.5px;text-decoration:none;
-  text-align:center;cursor:pointer;transition:all .15s;
-}
-.pricing-cta:hover{background:var(--red2);box-shadow:0 0 28px rgba(204,0,17,0.35)}
-.pricing-note{font-size:12px;color:var(--tx2);margin-top:14px;opacity:.7}
-
-.faq{width:100%;max-width:500px;margin-top:48px}
-.faq-title{font-size:18px;font-weight:700;text-align:center;margin-bottom:20px}
-.faq-item{border-top:1px solid rgba(255,255,255,0.06);padding:16px 0;cursor:pointer}
-.faq-q{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600}
-.faq-a{font-size:13px;color:var(--tx2);margin-top:10px;line-height:1.6;display:none}
-.faq-item.open .faq-a{display:block}
+.p-cta:hover{background:var(--red-h);box-shadow:0 0 30px var(--red-glow)}
+.p-note{font-size:12px;color:var(--muted);margin-top:13px;opacity:.7}
+.faq{width:100%;max-width:460px;margin-top:50px}
+.faq h3{font-size:17px;font-weight:700;text-align:center;margin-bottom:20px}
+.faq-item{border-top:1px solid var(--border);padding:15px 0;cursor:pointer;user-select:none}
+.faq-q{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;gap:12px}
+.faq-chevron{color:var(--muted);font-size:11px;transition:transform .2s;flex-shrink:0}
 .faq-item.open .faq-chevron{transform:rotate(180deg)}
-.faq-chevron{transition:transform .2s;color:var(--tx2);font-size:12px}
+.faq-a{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.65;display:none}
+.faq-item.open .faq-a{display:block}
+
+/* ─── DASHBOARD ─── */
+#pg-dash{flex-direction:column;align-items:center}
+.dash{width:100%;max-width:840px;padding:48px 24px}
+.dash-greet{font-size:24px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px}
+.dash-greet em{color:var(--red);font-style:normal}
+.dash-sub{font-size:13px;color:var(--muted);margin-bottom:38px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.gc{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:22px 24px}
+.gc.span2{grid-column:1/-1}
+.gc-label{font-size:9.5px;letter-spacing:3px;color:var(--muted);font-weight:700;margin-bottom:12px}
+.gc-val{font-size:26px;font-weight:900;letter-spacing:-1px;line-height:1}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;margin-top:9px}
+.badge-green{background:rgba(76,175,80,.1);color:#4caf50;border:1px solid rgba(76,175,80,.22)}
+.badge-red{background:rgba(200,0,26,.1);color:#e8001e;border:1px solid rgba(200,0,26,.25)}
+.key-row{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:11px 13px}
+.key-txt{flex:1;font-family:monospace;font-size:13px;letter-spacing:2px}
+.key-txt.masked{color:var(--muted);letter-spacing:4px}
+.key-btns{display:flex;gap:5px}
+.sm-btn{background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:5px 11px;font-size:11px;font-weight:600;color:var(--muted);transition:all .12s}
+.sm-btn:hover{color:var(--txt);border-color:rgba(255,255,255,.12)}
+.dl-btn{display:inline-flex;align-items:center;gap:9px;padding:12px 22px;border-radius:8px;font-size:14px;font-weight:700;letter-spacing:.3px;color:#fff;background:var(--red);border:none;transition:background .12s,box-shadow .12s}
+.dl-btn:hover{background:var(--red-h);box-shadow:0 0 22px var(--red-glow)}
+.v-note{font-size:12px;color:var(--muted);margin-top:9px}
+.steps{display:flex;flex-direction:column;gap:9px}
+.step{display:flex;align-items:flex-start;gap:12px;font-size:14px;color:var(--muted);line-height:1.5}
+.step-n{color:var(--red);font-weight:900;flex-shrink:0;width:18px}
+code{background:var(--bg);padding:1px 7px;border-radius:4px;font-size:12px;color:var(--txt)}
+
+/* ─── GUIDE ─── */
+#pg-guide{flex-direction:column;align-items:center;padding:60px 24px}
+.guide{width:100%;max-width:600px}
+.guide h1{font-size:30px;font-weight:800;letter-spacing:-1px;margin-bottom:6px}
+.guide h1 em{color:var(--red);font-style:normal}
+.guide-sub{font-size:14px;color:var(--muted);margin-bottom:44px}
+.guide-steps{display:flex;flex-direction:column;gap:28px}
+.g-step{display:flex;gap:20px}
+.g-step-num{min-width:34px;height:34px;border:1.5px solid var(--red);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:var(--red);flex-shrink:0}
+.g-step-body h3{font-size:15px;font-weight:700;margin-bottom:5px}
+.g-step-body p{font-size:13px;color:var(--muted);line-height:1.6}
+.guide-discord{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:28px;text-align:center;margin-top:44px}
+.guide-discord h3{font-size:15px;font-weight:700;margin-bottom:6px}
+.guide-discord p{font-size:13px;color:var(--muted);margin-bottom:18px}
 </style>
 </head>
 <body>
 
 <!-- NAV -->
-<nav>
-  <div class="nav-left">
-    <div class="nav-logo" onclick="showHome()">
-      <div class="nav-logo-icon">X</div>
-      <span class="nav-logo-name">X-AIM</span>
-    </div>
-    <div class="nav-links">
-      <button class="nav-link" id="nav-dash" onclick="goToDash()" style="display:none">&#9889; Dashboard</button>
-      <button class="nav-link" onclick="alert('Guide coming soon')">Guide</button>
-    </div>
+<nav class="nav">
+  <div class="nav-logo" onclick="go('home')" style="cursor:pointer">
+    <div class="nav-logo-box">X</div>
+    <span class="nav-logo-txt">X-AIM</span>
+  </div>
+  <div class="nav-links">
+    <button class="nav-a" id="nav-dash-btn" onclick="go('dash')" style="display:none">Dashboard</button>
+    <button class="nav-a" onclick="go('guide')">Guide</button>
   </div>
   <div class="nav-right">
-    <div id="nav-logged-out" style="display:flex;align-items:center;gap:8px">
-      <button class="nav-link" onclick="showLogin()">Log in</button>
-      <button class="nav-buy" onclick="showPricing()">Get X-AIM</button>
+    <div id="nav-out">
+      <button class="nav-ghost" onclick="go('login')">Log in</button>
+      <button class="nav-pill" onclick="go('pricing')">Get X-AIM</button>
     </div>
-    <div id="nav-logged-in" style="display:none">
-      <button class="nav-user" onclick="doLogout()">
-        <span class="nav-user-dot"></span>
-        <span id="nav-username">User</span>
-        &#9662;
+    <div id="nav-in">
+      <button class="nav-user" onclick="logout()">
+        <span class="nav-dot"></span>
+        <span id="nav-key-preview"></span>
+        <span style="font-size:10px;margin-left:2px">▾</span>
       </button>
     </div>
   </div>
 </nav>
 
-<!-- ══ HOME ══ -->
-<div id="page-home" class="page active">
-<div class="home" style="display:flex">
+<!-- ═══ HOME ═══ -->
+<div class="pg" id="pg-home">
   <div class="home-glow"></div>
-  <h1 class="home-title">X-<span>AIM</span></h1>
-  <p class="home-sub">Neural AI aim assist. reWASD integration. One lifetime license.</p>
-  <button class="btn-main" onclick="goToDash()">&#9889; Go to Dashboard</button>
-  <p class="home-hint" style="margin-top:20px">No license? <a onclick="showPricing()">Get X-AIM — $29.99</a></p>
-</div>
+  <div class="home-eyebrow">NEURAL AIM ASSIST</div>
+  <h1 class="home-h1">X-<em>AIM</em></h1>
+  <p class="home-sub">reWASD integration. 240 FPS AI tracking.<br>One lifetime license.</p>
+  <div class="home-cta">
+    <button class="btn-red" onclick="toDash()">⚡ Go to Dashboard</button>
+  </div>
+  <p class="home-hint">No license? <a onclick="go('pricing')">Get X-AIM for $29.99</a></p>
 </div>
 
-<!-- ══ LOGIN ══ -->
-<div id="page-login" class="page">
-<div class="login-wrap" style="display:flex">
-  <div class="login-box">
-    <div class="login-title">X-<span>AIM</span></div>
-    <div class="login-desc">Enter your license key to access the dashboard</div>
-    <label class="form-label">LICENSE KEY</label>
-    <input class="form-input" id="key-input" type="text" placeholder="XAIM-XXXX-XXXX-XXXX-XXXX" maxlength="24" autocomplete="off" spellcheck="false" oninput="fmtKey(this)" onkeydown="if(event.key==='Enter')doLogin()">
-    <button class="form-btn" id="login-btn" onclick="doLogin()">ACTIVATE</button>
-    <div class="form-status" id="login-status"></div>
-    <div class="login-sep">or</div>
-    <div class="login-alt">No key? <a onclick="showPricing()">Get X-AIM — $29.99 &rarr;</a></div>
-    <div style="margin-top:20px">
-      <button class="nav-link" style="width:100%;justify-content:center;font-size:13px" onclick="showHome()">&larr; Back</button>
+<!-- ═══ LOGIN ═══ -->
+<div class="pg" id="pg-login">
+  <div class="box-wrap" style="display:flex">
+    <div class="box">
+      <div class="box-logo">X-<em>AIM</em></div>
+      <div class="box-desc">Enter your license key to access the dashboard</div>
+      <div class="field">
+        <label class="field-label">LICENSE KEY</label>
+        <input class="field-input" id="key-inp" type="text" placeholder="XAIM-XXXX-XXXX-XXXX-XXXX" maxlength="24" autocomplete="off" spellcheck="false" oninput="fmtKey(this)" onkeydown="if(event.key==='Enter')login()">
+      </div>
+      <button class="box-btn" id="login-btn" onclick="login()">ACTIVATE</button>
+      <div class="box-status" id="login-st"></div>
+      <div class="sep">or</div>
+      <div class="box-alt">No key? <a onclick="go('pricing')">Get X-AIM — $29.99 →</a></div>
+      <div class="box-back"><button class="link-back" onclick="go('home')">← Back</button></div>
     </div>
   </div>
 </div>
-</div>
 
-<!-- ══ DASHBOARD ══ -->
-<div id="page-dashboard" class="page">
-<div class="dash-wrap" style="display:flex">
-<div class="dash-inner">
-  <div class="dash-greeting">Welcome back, <span id="dash-username">User</span></div>
-  <div class="dash-sub">Your X-AIM is ready.</div>
-  <div class="dash-grid">
-    <div class="dash-card">
-      <div class="dash-card-label">LICENSE</div>
-      <div class="dash-card-val">ACTIVE</div>
-      <div class="status-pill pill-green">&#9679; VALID</div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-card-label">TYPE</div>
-      <div class="dash-card-val" style="font-size:20px;margin-top:4px">LIFETIME</div>
-      <div class="status-pill pill-red">NEVER EXPIRES</div>
-    </div>
-    <div class="dash-card full">
-      <div class="dash-card-label">YOUR LICENSE KEY</div>
-      <div class="key-row">
-        <span class="key-val masked" id="key-display">&#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679;</span>
-        <div class="key-actions">
-          <button class="key-btn" onclick="toggleKey()">Show</button>
-          <button class="key-btn" id="copy-btn" onclick="copyKey()">Copy</button>
-        </div>
-      </div>
-      <p style="font-size:12px;color:var(--tx2);margin-top:10px;opacity:.6">Keep this key private. Sharing it will result in a ban.</p>
-    </div>
-    <div class="dash-card full">
-      <div class="dash-card-label">DOWNLOAD</div>
-      <a class="dl-btn" href="#" onclick="alert('Download link coming soon. Contact support on Discord.');return false">
-        &#11015; Download X-AIM V2.0
-      </a>
-      <div class="version-note">Version 2.0 &middot; Python 3.10+ &middot; Windows 10/11</div>
-    </div>
-    <div class="dash-card full">
-      <div class="dash-card-label">QUICK START</div>
-      <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;color:var(--tx2)">
-        <div><span style="color:var(--red);font-weight:800;margin-right:10px">1.</span>Download and extract X-AIM V2</div>
-        <div><span style="color:var(--red);font-weight:800;margin-right:10px">2.</span>Run <code style="background:var(--bg);padding:2px 8px;border-radius:4px;font-size:12px">launcher.py</code> with Python</div>
-        <div><span style="color:var(--red);font-weight:800;margin-right:10px">3.</span>Enter your license key when prompted</div>
-        <div><span style="color:var(--red);font-weight:800;margin-right:10px">4.</span>Import the reWASD profile and play</div>
-      </div>
-    </div>
+<!-- ═══ PRICING ═══ -->
+<div class="pg" id="pg-pricing">
+  <div class="pricing-head">
+    <h2>Get <em>Lifetime Access</em></h2>
+    <p>One payment. All features. Forever.</p>
   </div>
-</div>
-</div>
-</div>
-
-<!-- ══ PRICING ══ -->
-<div id="page-pricing" class="page">
-<div class="pricing-wrap" style="display:flex">
-  <h2 class="pricing-title">Get <span>Lifetime Access</span></h2>
-  <p class="pricing-sub">One payment. All features. Forever yours.</p>
-  <div class="pricing-card">
-    <div class="pricing-badge">BEST VALUE</div>
-    <div class="pricing-name">Lifetime License</div>
-    <div class="pricing-amount"><sup>$</sup>29<span style="font-size:36px">.99</span></div>
-    <div class="pricing-once">One-time payment &mdash; lifetime access</div>
-    <div class="pricing-features">
-      <div class="pf"><span class="pf-check">&#10003;</span> Neural AI aim tracking (240 FPS)</div>
-      <div class="pf"><span class="pf-check">&#10003;</span> ADS auto-boost mode</div>
-      <div class="pf"><span class="pf-check">&#10003;</span> reWASD profile + settle macros</div>
-      <div class="pf"><span class="pf-check">&#10003;</span> Live overlay UI</div>
-      <div class="pf"><span class="pf-check">&#10003;</span> HWID-locked license</div>
-      <div class="pf"><span class="pf-check">&#10003;</span> All future updates</div>
-      <div class="pf"><span class="pf-check">&#10003;</span> Discord support</div>
+  <div class="p-card">
+    <div class="p-badge">BEST VALUE</div>
+    <div class="p-type">Lifetime License</div>
+    <div class="p-price"><sup>$</sup>29<span style="font-size:38px">.99</span></div>
+    <div class="p-once">One-time payment — never expires</div>
+    <div class="p-features">
+      <div class="p-feat"><span class="p-feat-check">✓</span>Neural AI aim tracking (240 FPS)</div>
+      <div class="p-feat"><span class="p-feat-check">✓</span>ADS auto-boost mode</div>
+      <div class="p-feat"><span class="p-feat-check">✓</span>reWASD profile + settle macros</div>
+      <div class="p-feat"><span class="p-feat-check">✓</span>Live overlay UI</div>
+      <div class="p-feat"><span class="p-feat-check">✓</span>HWID-locked license key</div>
+      <div class="p-feat"><span class="p-feat-check">✓</span>All future updates included</div>
+      <div class="p-feat"><span class="p-feat-check">✓</span>Discord support</div>
     </div>
-    <a class="pricing-cta" href="https://whop.com/x-aim/x-aim-lifetime-access" target="_blank">Buy Now</a>
-    <div class="pricing-note">Secure checkout via Whop &middot; Instant delivery &middot; Key sent by email</div>
+    <a class="p-cta" href="https://whop.com/x-aim/x-aim-lifetime-access" target="_blank">Buy Now — $29.99</a>
+    <div class="p-note">Secure checkout · Key delivered instantly by email</div>
   </div>
   <div class="faq">
-    <div class="faq-title">FAQ</div>
-    <div class="faq-item" onclick="toggleFaq(this)">
-      <div class="faq-q">Is this really a lifetime license? <span class="faq-chevron">&#9660;</span></div>
-      <div class="faq-a">Yes. Pay once, own X-AIM forever. No subscriptions, no renewals. All future updates are included.</div>
+    <h3>FAQ</h3>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-q">Is this really lifetime? <span class="faq-chevron">▾</span></div>
+      <div class="faq-a">Yes. Pay once and own X-AIM forever. No subscriptions or renewals. Every future update is included at no cost.</div>
     </div>
-    <div class="faq-item" onclick="toggleFaq(this)">
-      <div class="faq-q">What if I change computers? <span class="faq-chevron">&#9660;</span></div>
-      <div class="faq-a">Your license is HWID-locked to one machine. If you change PC, contact support on Discord and we'll transfer it.</div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-q">What if I change my PC? <span class="faq-chevron">▾</span></div>
+      <div class="faq-a">Your license is HWID-locked to one machine. If you upgrade, contact us on Discord and we'll transfer it immediately.</div>
     </div>
-    <div class="faq-item" onclick="toggleFaq(this)">
-      <div class="faq-q">How do I get my key after purchase? <span class="faq-chevron">&#9660;</span></div>
-      <div class="faq-a">Your license key is delivered instantly by email right after payment. It's also visible in your Whop account.</div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-q">How do I receive my key? <span class="faq-chevron">▾</span></div>
+      <div class="faq-a">Your license key is sent instantly by email after payment. It's also visible in your Whop account dashboard.</div>
     </div>
-    <div class="faq-item" onclick="toggleFaq(this)">
-      <div class="faq-q">What games are supported? <span class="faq-chevron">&#9660;</span></div>
-      <div class="faq-a">X-AIM works on any game that supports mouse input via reWASD &mdash; Fortnite, Apex, Warzone, and more.</div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-q">What games does it support? <span class="faq-chevron">▾</span></div>
+      <div class="faq-a">Any game that supports mouse input via reWASD — Fortnite, Apex Legends, Warzone, and more.</div>
     </div>
   </div>
 </div>
+
+<!-- ═══ DASHBOARD ═══ -->
+<div class="pg" id="pg-dash">
+  <div class="dash">
+    <div class="dash-greet">Welcome back, <em>XAIM User</em></div>
+    <div class="dash-sub">Your license is active and ready.</div>
+    <div class="grid">
+
+      <div class="gc">
+        <div class="gc-label">LICENSE STATUS</div>
+        <div class="gc-val">ACTIVE</div>
+        <div class="badge badge-green">● VALID</div>
+      </div>
+
+      <div class="gc">
+        <div class="gc-label">LICENSE TYPE</div>
+        <div class="gc-val" style="font-size:18px;margin-top:4px">LIFETIME</div>
+        <div class="badge badge-red">NEVER EXPIRES</div>
+      </div>
+
+      <div class="gc span2">
+        <div class="gc-label">YOUR LICENSE KEY</div>
+        <div class="key-row">
+          <span class="key-txt masked" id="kdisp">● ● ● ● ● ● ● ● ● ● ● ●</span>
+          <div class="key-btns">
+            <button class="sm-btn" id="show-btn" onclick="toggleKey()">Show</button>
+            <button class="sm-btn" id="copy-btn" onclick="copyKey()">Copy</button>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-top:9px;opacity:.6">Keep this key private — sharing it will get your license revoked.</p>
+      </div>
+
+      <div class="gc span2">
+        <div class="gc-label">DOWNLOAD</div>
+        <button class="dl-btn" onclick="alert('Upload your X-AIM zip to Google Drive or GitHub Releases, then replace this link.')">⬇ Download X-AIM V2.0</button>
+        <div class="v-note">Version 2.0 · Requires Python 3.10+ · Windows 10 / 11</div>
+      </div>
+
+      <div class="gc span2">
+        <div class="gc-label">QUICK START</div>
+        <div class="steps">
+          <div class="step"><span class="step-n">1.</span><span>Download and extract the X-AIM V2 zip</span></div>
+          <div class="step"><span class="step-n">2.</span><span>Run <code>launcher.py</code> with Python 3.10+</span></div>
+          <div class="step"><span class="step-n">3.</span><span>Enter your license key when prompted</span></div>
+          <div class="step"><span class="step-n">4.</span><span>Import the reWASD profile included in the zip and play</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══ GUIDE ═══ -->
+<div class="pg" id="pg-guide">
+  <div class="guide">
+    <h1>Setup <em>Guide</em></h1>
+    <p class="guide-sub">Get X-AIM running in under 5 minutes.</p>
+    <div class="guide-steps">
+      <div class="g-step">
+        <div class="g-step-num">01</div>
+        <div class="g-step-body">
+          <h3>Purchase X-AIM</h3>
+          <p>Head to the Subscribe page and complete payment. Your license key will be emailed immediately after.</p>
+        </div>
+      </div>
+      <div class="g-step">
+        <div class="g-step-num">02</div>
+        <div class="g-step-body">
+          <h3>Log in with your key</h3>
+          <p>Click "Log in" in the nav, enter your license key in the format XAIM-XXXX-XXXX-XXXX-XXXX and hit Activate.</p>
+        </div>
+      </div>
+      <div class="g-step">
+        <div class="g-step-num">03</div>
+        <div class="g-step-body">
+          <h3>Download X-AIM V2</h3>
+          <p>From your dashboard, click the Download button and extract the zip anywhere on your PC.</p>
+        </div>
+      </div>
+      <div class="g-step">
+        <div class="g-step-num">04</div>
+        <div class="g-step-body">
+          <h3>Install Python 3.10+</h3>
+          <p>Download Python from python.org if you don't have it. Make sure to check "Add to PATH" during install.</p>
+        </div>
+      </div>
+      <div class="g-step">
+        <div class="g-step-num">05</div>
+        <div class="g-step-body">
+          <h3>Import the reWASD profile</h3>
+          <p>Open reWASD, import the profile included in the X-AIM zip. Close reWASD before editing any profile files.</p>
+        </div>
+      </div>
+      <div class="g-step">
+        <div class="g-step-num">06</div>
+        <div class="g-step-body">
+          <h3>Run launcher.py</h3>
+          <p>Double-click <code>launcher.py</code> or run it from a terminal. Enter your license key when prompted, then play.</p>
+        </div>
+      </div>
+    </div>
+    <div class="guide-discord">
+      <h3>Need help?</h3>
+      <p>Join the Discord for live support, updates, and the community.</p>
+      <a class="btn-red" href="https://discord.gg/" target="_blank" rel="noopener">Join Discord</a>
+    </div>
+  </div>
 </div>
 
 <script>
-var pages=['page-home','page-login','page-dashboard','page-pricing'];
-function showPage(id){
-  pages.forEach(function(p){
-    var el=document.getElementById(p);
-    el.classList.remove('active');
-    el.style.display='none';
-  });
-  var target=document.getElementById(id);
-  target.classList.add('active');
-  target.style.display='flex';
-}
-function showHome(){showPage('page-home');updateNav()}
-function showLogin(){
-  document.getElementById('login-status').textContent='';
-  document.getElementById('key-input').value='';
-  showPage('page-login');updateNav();
-}
-function showDashboard(){
-  var k=localStorage.getItem('xaim_key')||'';
-  document.getElementById('dash-username').textContent='XAIM User';
-  document.getElementById('key-display').textContent='● ● ● ● ● ● ● ● ● ● ● ●';
-  document.getElementById('key-display').className='key-val masked';
-  showPage('page-dashboard');updateNav();
-}
-function showPricing(){showPage('page-pricing');updateNav()}
+// ── State ──────────────────────────────
+var KEY = localStorage.getItem('xaim_k') || '';
+var keyVis = false;
 
-function goToDash(){
-  if(isLoggedIn()) showDashboard();
-  else showLogin();
+// ── Nav ────────────────────────────────
+function syncNav() {
+  var li = !!KEY;
+  document.getElementById('nav-out').style.display = li ? 'none' : 'flex';
+  document.getElementById('nav-in').style.display  = li ? 'flex' : 'none';
+  document.getElementById('nav-dash-btn').style.display = li ? 'flex' : 'none';
+  if (li) document.getElementById('nav-key-preview').textContent = KEY.slice(0,9);
 }
 
-function isLoggedIn(){return!!localStorage.getItem('xaim_key')}
-
-function updateNav(){
-  var li=isLoggedIn();
-  document.getElementById('nav-logged-out').style.display=li?'none':'flex';
-  document.getElementById('nav-logged-in').style.display=li?'flex':'none';
-  document.getElementById('nav-dash').style.display=li?'flex':'none';
-  if(li){
-    var k=localStorage.getItem('xaim_key')||'';
-    document.getElementById('nav-username').textContent=k.slice(0,9)||'User';
-  }
+// ── Routing ────────────────────────────
+function go(pg) {
+  document.querySelectorAll('.pg').forEach(function(el){ el.classList.remove('show') });
+  document.getElementById('pg-'+pg).classList.add('show');
+  document.querySelectorAll('.nav-a').forEach(function(el){ el.classList.remove('on') });
 }
 
-function fmtKey(el){
-  var v=el.value.replace(/[^A-Za-z0-9]/g,'').toUpperCase();
-  var out='';
-  for(var i=0;i<v.length&&i<20;i++){
-    if(i===4||i===8||i===12||i===16) out+='-';
+function toDash() {
+  if (KEY) go('dash');
+  else go('login');
+}
+
+// ── Auth ───────────────────────────────
+function fmtKey(el) {
+  var v = el.value.replace(/[^A-Za-z0-9]/g,'').toUpperCase().slice(0,20);
+  var out = '';
+  for (var i = 0; i < v.length; i++) {
+    if (i===4||i===8||i===12||i===16) out+='-';
     out+=v[i];
   }
-  el.value=out;
+  el.value = out;
 }
 
-function doLogin(){
-  var raw=document.getElementById('key-input').value.trim().toUpperCase();
-  var btn=document.getElementById('login-btn');
-  var st=document.getElementById('login-status');
-  if(!raw){st.className='form-status';st.textContent='Enter your license key.';return}
-  var clean=raw.replace(/-/g,'');
-  if(!/^XAIM[0-9A-F]{16}$/.test(clean)||raw.split('-').length!==5){
-    st.className='form-status';st.textContent='✗ Invalid key format.';return;
+function login() {
+  var raw = document.getElementById('key-inp').value.trim().toUpperCase();
+  var st  = document.getElementById('login-st');
+  var btn = document.getElementById('login-btn');
+  st.textContent = '';
+  if (!raw) { st.className='box-status err'; st.textContent='Enter your license key.'; return; }
+  var clean = raw.replace(/-/g,'');
+  if (!/^XAIM[0-9A-F]{16}$/.test(clean) || raw.split('-').length !== 5) {
+    st.className='box-status err'; st.textContent='✗ Invalid key format.'; return;
   }
-  btn.disabled=true;btn.textContent='Activating...';
-  setTimeout(function(){
-    localStorage.setItem('xaim_key',raw);
-    st.className='form-status ok';st.textContent='✓ Activated!';
-    setTimeout(function(){
-      updateNav();showDashboard();
-      btn.disabled=false;btn.textContent='ACTIVATE';
-    },500);
-  },600);
+  btn.disabled = true; btn.textContent = 'Activating...';
+  setTimeout(function() {
+    KEY = raw;
+    localStorage.setItem('xaim_k', KEY);
+    syncNav();
+    st.className='box-status ok'; st.textContent='✓ License activated!';
+    setTimeout(function() {
+      btn.disabled=false; btn.textContent='ACTIVATE';
+      go('dash');
+    }, 600);
+  }, 700);
 }
 
-function doLogout(){
-  localStorage.removeItem('xaim_key');
-  updateNav();showHome();
+function logout() {
+  KEY = '';
+  localStorage.removeItem('xaim_k');
+  syncNav();
+  go('home');
 }
 
-var keyVis=false;
-function toggleKey(){
-  var el=document.getElementById('key-display');
-  var btn=document.querySelector('.key-actions .key-btn');
-  keyVis=!keyVis;
-  if(keyVis){
-    el.textContent=localStorage.getItem('xaim_key')||'—';
-    el.className='key-val';btn.textContent='Hide';
-  }else{
-    el.textContent='● ● ● ● ● ● ● ● ● ● ● ●';
-    el.className='key-val masked';btn.textContent='Show';
-  }
+// ── Key display ────────────────────────
+function toggleKey() {
+  keyVis = !keyVis;
+  var el  = document.getElementById('kdisp');
+  var btn = document.getElementById('show-btn');
+  el.textContent = keyVis ? KEY : '● ● ● ● ● ● ● ● ● ● ● ●';
+  el.className   = 'key-txt' + (keyVis ? '' : ' masked');
+  btn.textContent = keyVis ? 'Hide' : 'Show';
 }
 
-function copyKey(){
-  var k=localStorage.getItem('xaim_key')||'';
-  if(!k)return;
-  navigator.clipboard.writeText(k).then(function(){
-    var btn=document.getElementById('copy-btn');
-    btn.textContent='Copied!';
-    setTimeout(function(){btn.textContent='Copy'},1500);
+function copyKey() {
+  navigator.clipboard.writeText(KEY).then(function() {
+    var btn = document.getElementById('copy-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(function(){ btn.textContent='Copy'; }, 1500);
   });
 }
 
-function toggleFaq(el){el.classList.toggle('open')}
-
-updateNav();
+// ── Boot ───────────────────────────────
+syncNav();
+go('home');
 </script>
 </body>
 </html>
