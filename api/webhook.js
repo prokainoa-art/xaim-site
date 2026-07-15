@@ -112,9 +112,8 @@ export default async function handler(req, res) {
   if (!email) return res.status(400).json({ error: "Pas d'email client" });
 
   const key    = generateKey();
-  const sendTo = process.env.TEST_EMAIL_OVERRIDE || email;
-  const result = await sendKey(sendTo, key);
-  console.log(`[X-AIM] ${email} → ${sendTo} → ${key} (Resend: ${result.status})`);
+  const result = await sendKey(email, key);
+  console.log(`[X-AIM] ${email} → ${key} (Resend: ${result.status})`);
 
   return res.status(200).json({ received: true });
 }
