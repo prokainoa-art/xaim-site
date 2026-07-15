@@ -2,10 +2,12 @@ const crypto = require("crypto");
 const https  = require("https");
 
 // Toutes les valeurs sensibles viennent des variables d'environnement Vercel
-const STRIPE_WEBHOOK_SEC = process.env.STRIPE_WEBHOOK_SECRET;
-const RESEND_API_KEY     = process.env.RESEND_API_KEY;
-const XAIM_HMAC_SECRET   = process.env.XAIM_HMAC_SECRET;
-const FROM_EMAIL         = process.env.FROM_EMAIL || "X-AIM <noreply@xaim.gg>";
+const STRIPE_WEBHOOK_SEC  = process.env.STRIPE_WEBHOOK_SECRET;
+const RESEND_API_KEY      = process.env.RESEND_API_KEY;
+const XAIM_HMAC_SECRET    = process.env.XAIM_HMAC_SECRET;
+const FROM_EMAIL          = process.env.FROM_EMAIL || "X-AIM <noreply@xaim.gg>";
+const SUPABASE_URL        = process.env.SUPABASE_URL;
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
 function randSeg() {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -111,7 +113,28 @@ export default async function handler(req, res) {
   const email   = session.customer_details?.email || session.customer_email;
   if (!email) return res.status(400).json({ error: "Pas d'email client" });
 
-  const key    = generateKey();
+  const key = generateKey();
+
+  // Enregistre la clé dans Supabase
+  await new Promise((resolve) => {
+    const payload = JSON.stringify({ key, email, created_at: new Date().toISOString() });
+    const base = new URL(SUPABASE_URL);
+    const req = https.request({
+      hostname: base.hostname,
+      path:     "/rest/v1/licenses",
+      method:   "POST",
+      headers: {
+        "apikey":        SUPABASE_SERVICE_KEY,
+        "Authorization": `Bearer ${SUPABASE_SERVICE_KEY}`,
+        "Content-Type":  "application/json",
+        "Prefer":        "return=minimal",
+        "Content-Length": Buffer.byteLength(payload),
+      },
+    }, (res) => { res.resume(); res.on("end", resolve); });
+    req.on("error", resolve);
+    req.write(payload); req.end();
+  });
+
   const result = await sendKey(email, key);
   console.log(`[X-AIM] ${email} → ${key} (Resend: ${result.status})`);
 
