@@ -9,7 +9,7 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
   --bg:#020202;--panel:#080607;--panel2:#0c0909;
-  --red:#c8001a;--red-h:#e8001e;--red-glow:rgba(200,0,26,.18);
+  --red:#8f000e;--red-h:#c8001a;--red-glow:rgba(143,0,14,.16);
   --txt:#dedad6;--muted:#544d4d;--border:rgba(255,255,255,.045);
   --border-red:rgba(200,0,26,.22);--gold:#fbbf24;
 }
@@ -92,16 +92,8 @@ html{scroll-behavior:smooth}
   color:#f2d9d9;margin-top:2px;text-shadow:0 0 12px rgba(255,60,20,.5);animation:emberflicker 3.2s ease-in-out infinite}
 @keyframes emberflicker{0%,100%{opacity:1}48%{opacity:.82}52%{opacity:1}76%{opacity:.9}}
 
-/* ── Particules d'étincelles ── */
-.embers{position:absolute;inset:-10%;pointer-events:none;z-index:0}
-.ember{position:absolute;bottom:0;border-radius:50%;background:radial-gradient(circle,#ffb060 0%,#ff3a1a 45%,rgba(200,0,26,0) 75%);
-  animation:emberrise linear infinite;opacity:0}
-@keyframes emberrise{
-  0%{transform:translateY(0) translateX(0) scale(.6);opacity:0}
-  8%{opacity:1}
-  70%{opacity:.6}
-  100%{transform:translateY(-260px) translateX(var(--ex,10px)) scale(.15);opacity:0}
-}
+/* ── Canvas de particules feu ── */
+.fire-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
 
 /* ── FEATURES / WHY ── */
 .why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
@@ -416,43 +408,56 @@ code{background:var(--bg);padding:1px 7px;border-radius:4px;font-size:12px;color
       </div>
 
       <div class="hero-art">
-        <div class="embers" id="embers"></div>
+        <div id="tsparticles-fire" class="fire-canvas"></div>
         <svg class="x-emblem" viewBox="0 0 300 300">
           <defs>
             <linearGradient id="xg" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#ff5a1a"/>
-              <stop offset="35%" stop-color="#e8001e"/>
-              <stop offset="100%" stop-color="#3a0006"/>
+              <stop offset="0%" stop-color="#ff7a1a"/>
+              <stop offset="22%" stop-color="#8f000e"/>
+              <stop offset="60%" stop-color="#3a0006"/>
+              <stop offset="100%" stop-color="#0d0102"/>
             </linearGradient>
             <radialGradient id="xglow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="rgba(255,70,20,.45)"/>
-              <stop offset="45%" stop-color="rgba(200,0,26,.16)"/>
+              <stop offset="0%" stop-color="rgba(200,50,10,.30)"/>
+              <stop offset="40%" stop-color="rgba(143,0,14,.10)"/>
               <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
             </radialGradient>
-            <filter id="fireTex" x="-30%" y="-30%" width="160%" height="160%">
-              <feTurbulence type="fractalNoise" baseFrequency="0.012 0.9" numOctaves="3" seed="7" result="n"/>
-              <feDisplacementMap in="SourceGraphic" in2="n" scale="7"/>
+            <radialGradient id="vign" cx="50%" cy="50%" r="55%">
+              <stop offset="55%" stop-color="rgba(0,0,0,0)"/>
+              <stop offset="100%" stop-color="rgba(0,0,0,.6)"/>
+            </radialGradient>
+            <filter id="crackTex" x="-30%" y="-30%" width="160%" height="160%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.045 0.16" numOctaves="4" seed="9" result="n"/>
+              <feColorMatrix in="n" type="matrix"
+                values="0 0 0 0 1
+                        0 0 0 0 1
+                        0 0 0 0 1
+                        0.4 0.4 0.4 0 -0.55" result="mask"/>
+              <feComposite in="mask" in2="SourceAlpha" operator="in" result="maskedNoise"/>
+              <feBlend in="SourceGraphic" in2="maskedNoise" mode="multiply" result="textured"/>
+              <feDisplacementMap in="textured" in2="n" scale="5"/>
             </filter>
-            <filter id="fireGlow" x="-60%" y="-60%" width="220%" height="220%">
-              <feGaussianBlur stdDeviation="6" result="b"/>
+            <filter id="fireGlow" x="-70%" y="-70%" width="240%" height="240%">
+              <feGaussianBlur stdDeviation="7" result="b"/>
               <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
             </filter>
           </defs>
           <rect x="0" y="0" width="300" height="300" fill="url(#xglow)"/>
-          <circle cx="150" cy="150" r="118" fill="none" stroke="rgba(200,0,26,.22)" stroke-width="1" stroke-dasharray="2 8"/>
-          <circle cx="150" cy="150" r="80" fill="none" stroke="rgba(200,0,26,.3)" stroke-width="1"/>
-          <g stroke="rgba(200,0,26,.4)" stroke-width="2">
+          <circle cx="150" cy="150" r="118" fill="none" stroke="rgba(143,0,14,.16)" stroke-width="1" stroke-dasharray="2 8"/>
+          <circle cx="150" cy="150" r="80" fill="none" stroke="rgba(143,0,14,.22)" stroke-width="1"/>
+          <g stroke="rgba(143,0,14,.3)" stroke-width="2">
             <line x1="150" y1="10" x2="150" y2="30"/>
             <line x1="150" y1="270" x2="150" y2="290"/>
             <line x1="10" y1="150" x2="30" y2="150"/>
             <line x1="270" y1="150" x2="290" y2="150"/>
           </g>
           <g filter="url(#fireGlow)">
-            <g stroke="url(#xg)" stroke-width="17" stroke-linecap="round" filter="url(#fireTex)">
-              <line x1="80" y1="80" x2="220" y2="220"/>
-              <line x1="220" y1="80" x2="80" y2="220"/>
+            <g stroke="url(#xg)" stroke-width="18" stroke-linecap="round" filter="url(#crackTex)">
+              <line x1="78" y1="78" x2="222" y2="222"/>
+              <line x1="222" y1="78" x2="78" y2="222"/>
             </g>
           </g>
+          <rect x="0" y="0" width="300" height="300" fill="url(#vign)"/>
         </svg>
         <div class="x-emblem-aim">AIM</div>
       </div>
@@ -846,6 +851,7 @@ code{background:var(--bg);padding:1px 7px;border-radius:4px;font-size:12px;color
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@tsparticles/preset-fire@4/tsparticles.preset.fire.bundle.min.js"></script>
 <script>
 // ── State ──────────────────────────────
 var KEY = localStorage.getItem('xaim_k') || '';
@@ -943,23 +949,30 @@ function copyKey() {
   });
 }
 
-// ── Étincelles du hero ──────────────────
-(function spawnEmbers(){
-  var box = document.getElementById('embers');
-  if (!box) return;
-  var n = 22;
-  for (var i = 0; i < n; i++) {
-    var e = document.createElement('div');
-    e.className = 'ember';
-    var size = 2 + Math.random() * 4;
-    e.style.width = size + 'px';
-    e.style.height = size + 'px';
-    e.style.left = (30 + Math.random() * 40) + '%';
-    e.style.setProperty('--ex', (Math.random() * 60 - 30) + 'px');
-    e.style.animationDuration = (3 + Math.random() * 4) + 's';
-    e.style.animationDelay = (Math.random() * 6) + 's';
-    box.appendChild(e);
-  }
+// ── Effet feu du hero (tsParticles, preset officiel) ──
+(function initFire(){
+  if (typeof loadFirePreset === 'undefined' || typeof tsParticles === 'undefined') return;
+  (async function(){
+    await loadFirePreset(tsParticles);
+    await tsParticles.load({
+      id: 'tsparticles-fire',
+      options: {
+        preset: 'fire',
+        fullScreen: { enable: false },
+        // Le preset dessine son propre radial-gradient de fond — on le
+        // remplace pour qu'il se fonde exactement avec le noir de la page
+        // (--bg #020202) au lieu de créer un rectangle visible.
+        background: { image: 'radial-gradient(#3a0006, #020202)' },
+        particles: {
+          number: { value: 55, density: { enable: true, area: 400 } },
+          paint: { fill: { color: { value: ['#ff7a1a', '#c8001a', '#8f000e', '#3a0006'] } } },
+          move: { speed: 3.2 }
+        },
+        // Purement décoratif — pas d'interaction au clic sur toute la fenêtre
+        interactivity: { events: { onClick: { enable: false } } }
+      }
+    });
+  })();
 })();
 
 // ── Boot ───────────────────────────────
