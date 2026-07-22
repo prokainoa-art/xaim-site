@@ -20,8 +20,10 @@ a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer}
 .nav{
   position:fixed;inset:0 0 auto 0;height:50px;z-index:200;
   display:flex;align-items:center;padding:0 28px;gap:0;
-  background:var(--bg);
-  border-bottom:1px solid var(--border);
+  background:rgba(60,0,8,.28);
+  backdrop-filter:blur(14px) saturate(150%);
+  -webkit-backdrop-filter:blur(14px) saturate(150%);
+  border-bottom:1px solid rgba(200,0,26,.22);
 }
 .nav-logo{display:flex;align-items:center;gap:9px;margin-right:28px}
 .nav-logo-box{
@@ -73,7 +75,13 @@ html{scroll-behavior:smooth}
 
 /* ── HERO ── */
 .hero{position:relative;overflow:hidden;padding:110px 28px 60px;border-bottom:1px solid var(--border)}
-.hero-inner{position:relative;max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
+.hero-blob{position:absolute;top:50%;right:-10%;width:640px;height:640px;border-radius:50%;
+  background:radial-gradient(circle,rgba(200,0,26,.35) 0%,rgba(143,0,14,.14) 45%,transparent 72%);
+  filter:blur(2px);transform:translateY(-50%);pointer-events:none}
+.hero-inner{position:relative;z-index:1;max-width:1180px;margin:0 auto}
+.hero-inner-centered{display:flex;flex-direction:column;align-items:center;text-align:center}
+.hero-inner-centered .hero-sub{margin-left:auto;margin-right:auto}
+.hero-inner-centered .hero-cta,.hero-inner-centered .hero-stats{justify-content:center}
 .eyebrow{font-size:11px;letter-spacing:3px;color:var(--red);font-weight:700;margin-bottom:18px}
 .hero-h1{font-size:clamp(56px,7vw,84px);font-weight:900;letter-spacing:-3px;line-height:.95;margin-bottom:16px}
 .hero-h1 em{color:var(--red);font-style:normal}
@@ -85,13 +93,15 @@ html{scroll-behavior:smooth}
 .hstat b{display:block;font-size:13.5px;font-weight:700;color:var(--txt);line-height:1.3}
 .hstat span{display:block;font-size:12px;color:var(--muted);line-height:1.3}
 
-.hero-art{position:relative;display:flex;align-items:center;justify-content:center;min-height:320px}
-.x-emblem{width:100%;max-width:460px;mix-blend-mode:screen}
-
 /* ── FEATURES / WHY ── */
 .why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.feat-card{background:var(--panel);border:1px solid var(--border-red);border-radius:12px;padding:26px 20px;text-align:center}
-.feat-icon{width:44px;height:44px;border-radius:50%;background:rgba(200,0,26,.12);border:1px solid var(--border-red);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.feat-card{background:var(--panel);border:1px solid var(--border-red);border-radius:12px;padding:26px 20px;text-align:center;
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.feat-card:hover{transform:translateY(-4px);border-color:var(--red);box-shadow:0 10px 30px rgba(200,0,26,.16)}
+.feat-card:hover .feat-icon{background:var(--red);transform:scale(1.08)}
+.feat-card:hover .feat-icon svg{color:#fff}
+.feat-icon{width:44px;height:44px;border-radius:50%;background:rgba(200,0,26,.12);border:1px solid var(--border-red);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;transition:background .18s ease,transform .18s ease}
+.feat-icon svg{transition:color .18s ease}
 .feat-icon svg{width:20px;height:20px;color:var(--red)}
 .feat-card h3{font-size:13px;font-weight:800;letter-spacing:1px;margin-bottom:9px}
 .feat-card p{font-size:12.5px;color:var(--muted);line-height:1.6}
@@ -105,7 +115,9 @@ html{scroll-behavior:smooth}
 
 /* ── TESTIMONIALS ── */
 .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:26px}
-.testi-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:24px}
+.testi-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:24px;
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.testi-card:hover{transform:translateY(-4px);border-color:var(--border-red);box-shadow:0 10px 30px rgba(0,0,0,.35)}
 .stars{color:var(--gold);font-size:13px;letter-spacing:2px;margin-bottom:14px}
 .testi-quote{font-size:13.5px;color:var(--txt);line-height:1.6;margin-bottom:16px;font-style:italic}
 .testi-name{font-size:12.5px;font-weight:700;color:var(--muted)}
@@ -115,7 +127,9 @@ html{scroll-behavior:smooth}
 
 /* ── DISCORD BANNER ── */
 .discord-cta{max-width:1180px;margin:0 auto 70px;padding:0 28px}
-.discord-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;background:linear-gradient(120deg,rgba(200,0,26,.14),rgba(200,0,26,.04));border:1px solid var(--border-red);border-radius:14px;padding:26px 32px}
+.discord-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;background:linear-gradient(120deg,rgba(200,0,26,.14),rgba(200,0,26,.04));border:1px solid var(--border-red);border-radius:14px;padding:26px 32px;
+  transition:border-color .18s ease,box-shadow .18s ease}
+.discord-inner:hover{border-color:var(--red);box-shadow:0 10px 34px rgba(200,0,26,.18)}
 .discord-left{display:flex;align-items:center;gap:18px}
 .discord-icon{width:52px;height:52px;border-radius:12px;background:rgba(200,0,26,.14);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .discord-icon svg{width:26px;height:26px;color:var(--red)}
@@ -138,8 +152,6 @@ html{scroll-behavior:smooth}
 .footer-bottom{max-width:1180px;margin:0 auto;border-top:1px solid var(--border);padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;font-size:11.5px;color:var(--muted)}
 
 @media (max-width:900px){
-  .hero-inner{grid-template-columns:1fr}
-  .hero-art{order:-1;min-height:220px}
   .why-grid,.testi-grid{grid-template-columns:1fr}
   .footer-grid{grid-template-columns:1fr 1fr}
 }
@@ -364,7 +376,8 @@ code{background:var(--bg);padding:1px 7px;border-radius:4px;font-size:12px;color
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-inner">
+    <div class="hero-blob"></div>
+    <div class="hero-inner hero-inner-centered">
       <div>
         <div class="eyebrow">CONFIGURATIONS REWASD PREMIUM</div>
         <h1 class="hero-h1">X-<em>AIM</em></h1>
@@ -397,10 +410,6 @@ code{background:var(--bg);padding:1px 7px;border-radius:4px;font-size:12px;color
             <div><b>Support Discord</b><span>7j/7</span></div>
           </div>
         </div>
-      </div>
-
-      <div class="hero-art">
-        <img class="x-emblem" src="assets/x-emblem.png" alt="X-AIM" width="620" height="620" loading="eager">
       </div>
     </div>
   </section>
