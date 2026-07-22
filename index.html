@@ -371,7 +371,6 @@ code{background:var(--bg);padding:1px 7px;border-radius:4px;font-size:12px;color
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-glow"></div>
     <div class="hero-inner">
       <div>
         <div class="eyebrow">CONFIGURATIONS REWASD PREMIUM</div>
@@ -417,15 +416,6 @@ code{background:var(--bg);padding:1px 7px;border-radius:4px;font-size:12px;color
               <stop offset="60%" stop-color="#3a0006"/>
               <stop offset="100%" stop-color="#0d0102"/>
             </linearGradient>
-            <radialGradient id="xglow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="rgba(200,50,10,.30)"/>
-              <stop offset="40%" stop-color="rgba(143,0,14,.10)"/>
-              <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
-            </radialGradient>
-            <radialGradient id="vign" cx="50%" cy="50%" r="55%">
-              <stop offset="55%" stop-color="rgba(0,0,0,0)"/>
-              <stop offset="100%" stop-color="rgba(0,0,0,.6)"/>
-            </radialGradient>
             <filter id="crackTex" x="-30%" y="-30%" width="160%" height="160%">
               <feTurbulence type="fractalNoise" baseFrequency="0.045 0.16" numOctaves="4" seed="9" result="n"/>
               <feColorMatrix in="n" type="matrix"
@@ -442,7 +432,6 @@ code{background:var(--bg);padding:1px 7px;border-radius:4px;font-size:12px;color
               <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
             </filter>
           </defs>
-          <rect x="0" y="0" width="300" height="300" fill="url(#xglow)"/>
           <circle cx="150" cy="150" r="118" fill="none" stroke="rgba(143,0,14,.16)" stroke-width="1" stroke-dasharray="2 8"/>
           <circle cx="150" cy="150" r="80" fill="none" stroke="rgba(143,0,14,.22)" stroke-width="1"/>
           <g stroke="rgba(143,0,14,.3)" stroke-width="2">
@@ -457,7 +446,6 @@ code{background:var(--bg);padding:1px 7px;border-radius:4px;font-size:12px;color
               <line x1="222" y1="78" x2="78" y2="222"/>
             </g>
           </g>
-          <rect x="0" y="0" width="300" height="300" fill="url(#vign)"/>
         </svg>
         <div class="x-emblem-aim">AIM</div>
       </div>
@@ -960,9 +948,9 @@ function copyKey() {
         preset: 'fire',
         fullScreen: { enable: false },
         // Le preset dessine son propre radial-gradient de fond — on le
-        // remplace pour qu'il se fonde exactement avec le noir de la page
-        // (--bg #020202) au lieu de créer un rectangle visible.
-        background: { image: 'radial-gradient(#3a0006, #020202)' },
+        // fond 100% transparent — sinon le gradient du preset dessine un
+        // rectangle visible qui ne se fond pas avec la page (constaté).
+        background: { image: 'none', color: { value: 'transparent' } },
         particles: {
           number: { value: 55, density: { enable: true, area: 400 } },
           paint: { fill: { color: { value: ['#ff7a1a', '#c8001a', '#8f000e', '#3a0006'] } } },
