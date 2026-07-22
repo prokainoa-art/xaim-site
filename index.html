@@ -98,29 +98,6 @@ html{scroll-behavior:smooth}
 .feat-card h3{font-size:13px;font-weight:800;letter-spacing:1px;margin-bottom:9px}
 .feat-card p{font-size:12.5px;color:var(--muted);line-height:1.6}
 
-/* ── CONFIGS ── */
-.config-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.config-cards-single{grid-template-columns:1fr;max-width:360px;margin:0 auto}
-.cfg-card{background:var(--panel);border:1px solid var(--border-red);border-radius:12px;overflow:hidden}
-.cfg-banner{height:120px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.cfg-banner span{position:relative;font-size:22px;font-weight:900;letter-spacing:.5px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.6)}
-.cfg-banner::before{content:'';position:absolute;inset:0;background:
-  radial-gradient(circle at 30% 20%,rgba(255,255,255,.10),transparent 55%),
-  linear-gradient(160deg,var(--cfg-c1,#3a0008) 0%,var(--cfg-c2,#0d0d12) 100%)}
-.cfg-fortnite{--cfg-c1:#7a0012;--cfg-c2:#140407}
-.cfg-cod{--cfg-c1:#4a1000;--cfg-c2:#0e0704}
-.cfg-apex{--cfg-c1:#7a3d00;--cfg-c2:#150d02}
-.cfg-body{padding:20px 20px 22px}
-.cfg-tag{font-size:10px;font-weight:800;letter-spacing:2px;color:var(--muted);margin-bottom:10px}
-.cfg-feats{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
-.cfg-feat{font-size:12.5px;color:var(--txt);display:flex;gap:8px;align-items:flex-start}
-.cfg-feat::before{content:'•';color:var(--red);font-weight:900}
-.cfg-foot{display:flex;align-items:center;justify-content:space-between}
-.cfg-price{font-size:19px;font-weight:900;color:var(--red)}
-.cfg-buy{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:7px;font-size:12px;font-weight:700;letter-spacing:.5px;color:#fff;background:var(--red);border:none;cursor:pointer;transition:background .12s}
-.cfg-buy:hover{background:var(--red-h)}
-.cfg-buy svg{width:13px;height:13px}
-
 /* ── STATS BAR ── */
 .stats-bar{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:34px 28px;display:flex;justify-content:center;gap:70px;flex-wrap:wrap}
 .stat-item{display:flex;align-items:center;gap:12px}
@@ -165,7 +142,7 @@ html{scroll-behavior:smooth}
 @media (max-width:900px){
   .hero-inner{grid-template-columns:1fr}
   .hero-art{order:-1;min-height:220px}
-  .why-grid,.config-cards,.testi-grid{grid-template-columns:1fr}
+  .why-grid,.testi-grid{grid-template-columns:1fr}
   .footer-grid{grid-template-columns:1fr 1fr}
 }
 
@@ -359,7 +336,7 @@ code{background:var(--bg);padding:1px 7px;border-radius:4px;font-size:12px;color
   </div>
   <div class="nav-links">
     <button class="nav-a on" onclick="go('home')">ACCUEIL</button>
-    <button class="nav-a" onclick="goAnchor('configs')">CONFIGS</button>
+    <button class="nav-a" onclick="go('pricing')">CONFIGS</button>
     <button class="nav-a" onclick="goAnchor('a-propos')">À PROPOS</button>
     <button class="nav-a" onclick="go('pricing')">FAQ</button>
     <button class="nav-a" onclick="goAnchor('avis')">AVIS</button>
@@ -400,8 +377,8 @@ code{background:var(--bg);padding:1px 7px;border-radius:4px;font-size:12px;color
             <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
             ACHETER MAINTENANT
           </button>
-          <a class="btn-outline" href="javascript:void(0)" onclick="goAnchor('configs')">
-            VOIR LES CONFIGS
+          <a class="btn-outline" href="javascript:void(0)" onclick="go('pricing')">
+            VOIR LE PRODUIT
             <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
           </a>
         </div>
@@ -479,31 +456,6 @@ code{background:var(--bg);padding:1px 7px;border-radius:4px;font-size:12px;color
         <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"/></svg></div>
         <h3>SUPPORT RAPIDE</h3>
         <p>Une équipe disponible 7j/7 sur Discord pour vous aider à tout moment.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONFIGS -->
-  <section class="sec" id="configs">
-    <h2 class="sec-title">NOS CONFIGURATIONS</h2>
-    <div class="config-cards config-cards-single">
-      <div class="cfg-card">
-        <div class="cfg-banner cfg-fortnite"><span>FORTNITE</span></div>
-        <div class="cfg-body">
-          <div class="cfg-tag">FORTNITE</div>
-          <div class="cfg-feats">
-            <div class="cfg-feat">Tracking optimisé</div>
-            <div class="cfg-feat">Réactivité améliorée</div>
-            <div class="cfg-feat">Plusieurs profils inclus</div>
-          </div>
-          <div class="cfg-foot">
-            <span class="cfg-price">19.99€</span>
-            <button class="cfg-buy" onclick="go('pricing')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-              ACHETER
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -586,7 +538,7 @@ code{background:var(--bg);padding:1px 7px;border-radius:4px;font-size:12px;color
       <div class="footer-col">
         <h4>LIENS RAPIDES</h4>
         <a onclick="go('home')" href="javascript:void(0)">Accueil</a>
-        <a onclick="goAnchor('configs')" href="javascript:void(0)">Configs</a>
+        <a onclick="go('pricing')" href="javascript:void(0)">Configs</a>
         <a onclick="goAnchor('a-propos')" href="javascript:void(0)">À propos</a>
         <a onclick="go('pricing')" href="javascript:void(0)">FAQ</a>
         <a onclick="goAnchor('avis')" href="javascript:void(0)">Avis</a>
