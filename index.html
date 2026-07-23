@@ -99,6 +99,14 @@ html{scroll-behavior:smooth}
 
 /* ── FEATURES / WHY ── */
 .why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+
+/* ── FAIR PLAY ── */
+.fairplay-sec{text-align:center}
+.fairplay-badge{display:inline-block;background:rgba(200,0,26,.12);border:1px solid var(--border-red);color:var(--red-h);
+  font-size:10px;font-weight:800;letter-spacing:2.5px;padding:5px 16px;border-radius:20px;margin-bottom:18px}
+.fairplay-lead{max-width:680px;margin:0 auto 40px;color:var(--muted);font-size:14.5px;line-height:1.7}
+.fairplay-grid{grid-template-columns:repeat(3,1fr)}
+@media (max-width:900px){.fairplay-grid{grid-template-columns:1fr}}
 .feat-card{background:var(--panel);border:1px solid var(--border-red);border-radius:12px;padding:26px 20px;text-align:center;
   transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
 .feat-card:hover{transform:translateY(-4px);border-color:var(--red);box-shadow:0 10px 30px rgba(200,0,26,.16)}
@@ -357,6 +365,7 @@ code{background:var(--bg);padding:1px 7px;border-radius:4px;font-size:12px;color
   <div class="nav-links">
     <button class="nav-a on" onclick="go('home')">HOME</button>
     <button class="nav-a" onclick="go('pricing')">CONFIGS</button>
+    <button class="nav-a" onclick="goAnchor('fair-play')">FAIR PLAY</button>
     <button class="nav-a" onclick="goAnchor('a-propos')">ABOUT</button>
     <button class="nav-a" onclick="go('pricing')">FAQ</button>
     <button class="nav-a" onclick="goAnchor('avis')">REVIEWS</button>
@@ -424,7 +433,31 @@ code{background:var(--bg);padding:1px 7px;border-radius:4px;font-size:12px;color
     </div>
   </section>
 
-  <!-- POURQUOI -->
+  <!-- FAIR PLAY -->
+  <section class="sec fairplay-sec" id="fair-play">
+    <div class="fairplay-badge">NOT A CHEAT</div>
+    <h2 class="sec-title">FAIR AIM ASSIST, <em>NOT</em> AN UNFAIR ADVANTAGE</h2>
+    <p class="fairplay-lead">Top controller players already get boosted native aim assist in-game. X-AIM routes your keyboard &amp; mouse input through a real virtual controller stick, so you get access to that same assistance — nothing more, nothing hidden.</p>
+    <div class="why-grid fairplay-grid">
+      <div class="feat-card">
+        <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+        <h3>NO CURSOR TAKEOVER</h3>
+        <p>Your input goes through a virtual controller stick — the game's own native aim assist does the rest, exactly like it would for a real controller player.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3>NO INJECTION, NO MEMORY READING</h3>
+        <p>X-AIM never touches game files or process memory. It only sends standard virtual controller input, the same way reWASD does.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M5 8l-3 6a4 4 0 008 0zM19 8l-3 6a4 4 0 008 0zM5 8h14M9 21h6"/></svg></div>
+        <h3>SAME ASSIST, DIFFERENT INPUT</h3>
+        <p>We're not creating an advantage — we're removing the imbalance between controller and keyboard &amp; mouse players.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY -->
   <section class="sec" id="a-propos">
     <h2 class="sec-title">WHY CHOOSE <em>X-AIM</em>?</h2>
     <div class="why-grid">
@@ -530,6 +563,7 @@ code{background:var(--bg);padding:1px 7px;border-radius:4px;font-size:12px;color
         <h4>QUICK LINKS</h4>
         <a onclick="go('home')" href="javascript:void(0)">Home</a>
         <a onclick="go('pricing')" href="javascript:void(0)">Configs</a>
+        <a onclick="goAnchor('fair-play')" href="javascript:void(0)">Fair Play</a>
         <a onclick="goAnchor('a-propos')" href="javascript:void(0)">About</a>
         <a onclick="go('pricing')" href="javascript:void(0)">FAQ</a>
         <a onclick="goAnchor('avis')" href="javascript:void(0)">Reviews</a>
@@ -684,6 +718,10 @@ code{background:var(--bg);padding:1px 7px;border-radius:4px;font-size:12px;color
 
   <div class="faq">
     <h3>FAQ</h3>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-q">Is this a cheat? <span class="faq-chevron">▾</span></div>
+      <div class="faq-a">No. X-AIM never injects into the game or reads its memory. It routes your keyboard &amp; mouse input through a virtual controller stick via reWASD, giving you access to the same native aim assist controller players already get. It's a fairness tool, not a takeover of your aim.</div>
+    </div>
     <div class="faq-item" onclick="this.classList.toggle('open')">
       <div class="faq-q">Is it really lifetime? <span class="faq-chevron">▾</span></div>
       <div class="faq-a">Yes. Pay once and keep X-AIM forever. No subscription, no renewal. Every future update is included at no charge.</div>
