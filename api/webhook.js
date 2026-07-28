@@ -38,9 +38,9 @@ function sendKey(toEmail, licenseKey) {
     </div>
     <p style="color:#888;font-size:13px;margin:0 0 8px"><b style="color:#ccc">Installation :</b></p>
     <ol style="color:#888;font-size:13px;margin:0 0 24px;padding-left:20px">
-      <li>Télécharge X-AIM depuis GitHub Releases</li>
-      <li>Lance INSTALLER.bat en admin</li>
-      <li>Lance le raccourci X-AIM sur le bureau</li>
+      <li>Installe reWASD si ce n'est pas déjà fait (rewasd.com)</li>
+      <li>Télécharge et lance X-AIM-Setup.exe depuis xaim.gg</li>
+      <li>Lance le raccourci X-AIM créé sur le bureau</li>
       <li>Entre ta clé dans le launcher</li>
       <li>F1 pour toggle l'aim assist</li>
     </ol>
