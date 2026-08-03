@@ -5,7 +5,10 @@ const https  = require("https");
 const STRIPE_WEBHOOK_SEC  = process.env.STRIPE_WEBHOOK_SECRET;
 const RESEND_API_KEY      = process.env.RESEND_API_KEY;
 const XAIM_HMAC_SECRET    = process.env.XAIM_HMAC_SECRET;
-const FROM_EMAIL          = process.env.FROM_EMAIL || "X-AIM <noreply@xaim.gg>";
+// Repli utilise seulement si FROM_EMAIL n'est pas defini sur Vercel. Le
+// domaine doit etre verifie chez Resend, sinon l'envoi echoue et le client
+// paie sans recevoir sa cle.
+const FROM_EMAIL          = process.env.FROM_EMAIL || "X-AIM <noreply@x-aim.xyz>";
 const SUPABASE_URL        = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
@@ -30,19 +33,19 @@ function sendKey(toEmail, licenseKey) {
 <html>
 <body style="background:#0a0a0a;color:#fff;font-family:Consolas,monospace;padding:40px;">
   <div style="max-width:520px;margin:0 auto;border:1px solid #cc0000;padding:30px;border-radius:4px;">
-    <h1 style="color:#cc0000;letter-spacing:4px;margin:0 0 8px">X-AIM V2</h1>
-    <p style="color:#888;margin:0 0 24px;font-size:12px">IA AIMBOT — LICENCE PERSONNELLE</p>
+    <h1 style="color:#cc0000;letter-spacing:4px;margin:0 0 8px">X-AIM STUDIO</h1>
+    <p style="color:#888;margin:0 0 24px;font-size:12px">GÉNÉRATEUR DE PROFIL REWASD — LICENCE PERSONNELLE</p>
     <p style="color:#ccc;margin:0 0 16px">Merci pour ton achat. Voici ta clé de licence :</p>
     <div style="background:#111;border:1px solid #cc0000;padding:16px;text-align:center;margin:0 0 24px;border-radius:2px;">
       <span style="color:#ff4444;font-size:20px;letter-spacing:3px;font-weight:bold">${licenseKey}</span>
     </div>
     <p style="color:#888;font-size:13px;margin:0 0 8px"><b style="color:#ccc">Installation :</b></p>
     <ol style="color:#888;font-size:13px;margin:0 0 24px;padding-left:20px">
-      <li>Installe reWASD si ce n'est pas déjà fait (rewasd.com)</li>
-      <li>Télécharge et lance X-AIM-Setup.exe depuis xaim.gg</li>
-      <li>Lance le raccourci X-AIM créé sur le bureau</li>
-      <li>Entre ta clé dans le launcher</li>
-      <li>F1 pour toggle l'aim assist</li>
+      <li>Installe reWASD si ce n'est pas déjà fait (rewasd.com) — payant, vendu séparément</li>
+      <li>Télécharge et lance X-AIM-Studio-Setup.exe depuis x-aim.xyz</li>
+      <li>Ouvre le raccourci X-AIM Studio créé sur le bureau</li>
+      <li>Entre ta clé, choisis ton DPI, ta sensibilité et ton style de jeu</li>
+      <li>Clique Générer puis Appliquer — ta config est en place</li>
     </ol>
     <p style="color:#555;font-size:11px;margin:0">Cette clé est personnelle et non transférable.</p>
   </div>
@@ -52,7 +55,7 @@ function sendKey(toEmail, licenseKey) {
   const payload = JSON.stringify({
     from:    FROM_EMAIL,
     to:      [toEmail],
-    subject: "X-AIM V2 — Ta clé de licence",
+    subject: "X-AIM Studio — Ta clé de licence",
     html:    htmlBody,
   });
 
