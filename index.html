@@ -951,7 +951,10 @@ function login() {
   st.textContent = '';
   if (!raw) { st.className='box-status err'; st.textContent='Enter your license key.'; return; }
   var clean = raw.replace(/-/g,'');
-  if (!/^XAIM[0-9A-F]{16}$/.test(clean) || raw.split('-').length !== 5) {
+  // [0-9A-Z] et non [0-9A-F] : les cles sont tirees dans tout l'alphabet,
+  // pas en hexadecimal. L'ancienne regle rejetait la majorite des cles
+  // reelles, par exemple XAIM-1TXW-TGY5-8ESY-E9D6.
+  if (!/^XAIM[0-9A-Z]{16}$/.test(clean) || raw.split('-').length !== 5) {
     st.className='box-status err'; st.textContent='✗ Invalid key format.'; return;
   }
   btn.disabled = true; btn.textContent = 'Activating...';
