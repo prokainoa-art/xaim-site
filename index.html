@@ -18,8 +18,14 @@ html,body{height:100%;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;ba
 a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer}
 
 /* ── Fixed background video (test) ── */
-.site-bg-video{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
-.site-bg-overlay{position:fixed;inset:0;background:rgba(2,2,2,.74);z-index:-1;pointer-events:none}
+.site-bg{position:fixed;inset:0;z-index:-2;background:
+  radial-gradient(1100px 720px at 50% -12%, rgba(224,36,63,.13), transparent 62%),
+  radial-gradient(900px 600px at 88% 26%, rgba(179,18,42,.07), transparent 66%),
+  radial-gradient(760px 520px at 8% 74%, rgba(224,36,63,.05), transparent 68%),
+  var(--bg)}
+.site-grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.5;
+  background-image:radial-gradient(rgba(255,255,255,.022) 1px,transparent 1px);
+  background-size:3px 3px}
 
 /* ─── NAV ─── */
 .nav{
@@ -240,50 +246,22 @@ html{scroll-behavior:smooth}
 .faq-item.open .faq-a{display:block}
 
 /* ─── APP MOCKUP (showcase) ─── */
-.app-mock-wrap{position:relative;display:flex;justify-content:center;padding:20px}
-.app-mock-glow{
   position:absolute;width:380px;height:380px;border-radius:50%;
   background:conic-gradient(from 0deg,transparent 0%,var(--red) 8%,transparent 24%,transparent 58%,var(--red) 74%,transparent 92%);
   filter:blur(38px);opacity:.5;animation:mockspin 7s linear infinite;pointer-events:none;
 }
 @keyframes mockspin{to{transform:rotate(360deg)}}
-.app-mock{position:relative;z-index:1;width:100%;max-width:320px;background:#0a0a0a;
   border:1px solid var(--border-red);border-radius:14px;padding:16px 18px 18px;
   box-shadow:0 20px 60px rgba(0,0,0,.5);
 }
-.mock-tb{display:flex;align-items:center;gap:6px;margin-bottom:14px}
-.mock-badge{font-size:11px;font-weight:800;letter-spacing:2px;color:var(--red)}
-.mock-badge b{color:#fff;font-weight:800}
-.mock-v2{font-size:9px;color:var(--muted);letter-spacing:2px}
-.mock-winctrl{width:16px;height:16px;display:flex;align-items:center;justify-content:center;
   font-size:9px;color:var(--muted);border-radius:4px}
-.mock-winctrl-x{color:var(--red)}
-.mock-title{text-align:center;font-size:30px;font-weight:900;letter-spacing:-1px;color:var(--red);margin-bottom:2px}
-.mock-title b{color:#fff;font-weight:900}
-.mock-sub{text-align:center;font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:12px}
-.mock-tag-row{display:flex;justify-content:center;margin-bottom:14px}
-.mock-tag{font-size:9px;font-weight:800;letter-spacing:1.5px;color:#fff;background:var(--red);
   padding:4px 12px;border-radius:5px}
-.mock-sep{height:1px;background:var(--border);margin:12px 0}
-.mock-status{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:800;letter-spacing:2px;
   color:var(--red);margin-bottom:12px}
-.mock-dot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:pulsedot 1.4s ease-in-out infinite}
 @keyframes pulsedot{0%,100%{opacity:1}50%{opacity:.3}}
-.mock-btn-primary{width:100%;padding:11px;border-radius:8px;background:var(--red);color:#fff;
   border:none;font-size:12px;font-weight:800;letter-spacing:1px;margin-bottom:8px;cursor:default}
-.mock-btn-secondary{width:100%;padding:11px;border-radius:8px;background:none;color:var(--muted);
   border:1px solid var(--border);font-size:12px;font-weight:700;letter-spacing:1px;cursor:default}
-.mock-toggles{display:flex;gap:30px;margin:16px 4px}
-.mock-toggle-col{display:flex;flex-direction:column;gap:6px;font-size:9px;color:var(--muted);
   letter-spacing:1.5px;font-weight:700}
-.mock-toggle{width:32px;height:18px;border-radius:9px;background:#161616;border:1px solid var(--border);position:relative}
-.mock-toggle.on{background:var(--red)}
-.mock-knob{width:12px;height:12px;border-radius:50%;background:#e8e4e4;position:absolute;top:2px;left:2px;transition:left .15s}
-.mock-toggle.on .mock-knob{left:16px;background:#fff}
-.mock-console{background:#050505;border:1px solid var(--border);border-radius:7px;padding:8px 10px;
   font-family:monospace;font-size:9.5px;color:var(--muted);line-height:1.7;margin-top:14px}
-.mock-console .ok{color:#4caf50}
-.mock-hint{text-align:center;font-size:9.5px;color:var(--muted);opacity:.6;margin-top:10px;letter-spacing:.5px}
 
 /* ─── TABS ─── */
 .tabs{width:100%;max-width:760px;margin:0 auto 20px}
@@ -421,11 +399,10 @@ code{background:var(--bg);padding:1px 7px;border-radius:4px;font-size:12px;color
 </head>
 <body>
 
-<!-- Fixed background video (test) -->
-<video class="site-bg-video" autoplay muted loop playsinline>
-  <source src="assets/bg-video.mp4" type="video/mp4">
-</video>
-<div class="site-bg-overlay"></div>
+<!-- Fond ambiant statique : la video de fond pesait 28 Mo pour un rendu
+     pixelise, et se rechargeait a chaque visite. -->
+<div class="site-bg"></div>
+<div class="site-grain"></div>
 
 <!-- NAV -->
 <nav class="nav">
@@ -720,42 +697,15 @@ code{background:var(--bg);padding:1px 7px;border-radius:4px;font-size:12px;color
   <!-- SHOWCASE: app mockup + pricing card -->
   <div class="pricing-showcase">
     <div class="app-mock-wrap">
-      <div class="app-mock-glow"></div>
-      <div class="app-mock">
-        <div class="mock-tb">
-          <span class="mock-badge">X-<b>AIM</b></span>
-          <span class="mock-v2">V2</span>
-          <span style="flex:1"></span>
-          <span class="mock-winctrl">KEY</span>
-          <span class="mock-winctrl">⚙</span>
-          <span class="mock-winctrl">−</span>
-          <span class="mock-winctrl mock-winctrl-x">×</span>
-        </div>
-        <div class="mock-title">X-<b>AIM</b></div>
-        <div class="mock-sub">CUSTOM CURVE&nbsp;·&nbsp;REWASD PROFILE&nbsp;·&nbsp;ADS LAYER</div>
-        <div class="mock-tag-row"><span class="mock-tag">FORTNITE</span></div>
-        <div class="mock-sep"></div>
-        <div class="mock-status"><span class="mock-dot"></span>ACTIVE</div>
-        <button class="mock-btn-primary" tabindex="-1">X-AIM&nbsp;&nbsp;ACTIVE</button>
-        <button class="mock-btn-secondary" tabindex="-1">STOP</button>
-        <div class="mock-sep"></div>
-        <div class="mock-toggles">
-          <div class="mock-toggle-col">
-            <span>OVERLAY</span>
-            <div class="mock-toggle on"><div class="mock-knob"></div></div>
+      <div class="st-shot" style="width:100%;max-width:430px">
+        <div class="st-win">
+          <div class="st-bar">
+            <span class="st-dot r"></span><span class="st-dot"></span><span class="st-dot"></span>
+            <span class="st-bar-t">X-AIM STUDIO</span>
           </div>
-          <div class="mock-toggle-col">
-            <span>PREVIEW</span>
-            <div class="mock-toggle"><div class="mock-knob"></div></div>
-          </div>
+          <img src="assets/studio.png" alt="X-AIM Studio interface"
+               width="1120" height="1023" loading="lazy" decoding="async">
         </div>
-        <div class="mock-console">
-          <div>// Python 3.11.9 OK</div>
-          <div>// Packages OK</div>
-          <div>// reWASD → FORTNITE (imported)</div>
-          <div class="ok">// X-AIM active.</div>
-        </div>
-        <div class="mock-hint">F1 — toggle on / off</div>
       </div>
     </div>
 
