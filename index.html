@@ -8,10 +8,11 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#020202;--panel:#080607;--panel2:#0c0909;
-  --red:#8f000e;--red-h:#c8001a;--red-glow:rgba(143,0,14,.16);
-  --txt:#dedad6;--muted:#544d4d;--border:rgba(255,255,255,.045);
-  --border-red:rgba(200,0,26,.22);--gold:#fbbf24;
+  --bg:#08060a;--panel:#0d0b11;--panel2:#141018;
+  --red:#e0243f;--red-h:#f0405a;--red-deep:#b3122a;--red-glow:rgba(224,36,63,.18);
+  --txt:#e8e4ec;--muted:#8b8494;--faint:#5c5763;
+  --border:rgba(255,255,255,.06);--border-red:rgba(224,36,63,.28);--gold:#fbbf24;
+  --r-sm:10px;--r-md:14px;--r-lg:20px;
 }
 html,body{height:100%;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--txt);font-size:15px;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer}
@@ -346,6 +347,76 @@ code{background:var(--bg);padding:1px 7px;border-radius:4px;font-size:12px;color
 .guide-discord{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:28px;text-align:center;margin-top:44px}
 .guide-discord h3{font-size:15px;font-weight:700;margin-bottom:6px}
 .guide-discord p{font-size:13px;color:var(--muted);margin-bottom:18px}
+
+/* ═══════════ X-AIM STUDIO — hero produit ═══════════ */
+.st-hero{position:relative;padding:118px 0 96px;overflow:hidden}
+.st-hero::before{content:"";position:absolute;top:-28%;left:50%;transform:translateX(-50%);
+  width:1100px;height:780px;pointer-events:none;
+  background:radial-gradient(closest-side,var(--red-glow),transparent 72%)}
+.st-wrap{position:relative;max-width:1240px;margin:0 auto;padding:0 34px;
+  display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);
+  gap:66px;align-items:center}
+.st-eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:10.5px;
+  font-weight:800;letter-spacing:3.4px;color:var(--red);margin-bottom:22px;
+  padding:7px 14px;border:1px solid var(--border-red);border-radius:999px;
+  background:rgba(224,36,63,.05)}
+.st-eyebrow i{width:5px;height:5px;border-radius:50%;background:var(--red);
+  box-shadow:0 0 10px var(--red);font-style:normal}
+.st-h1{font-size:clamp(44px,5.6vw,74px);line-height:.98;letter-spacing:-1.8px;
+  font-weight:900;margin:0 0 22px}
+.st-h1 em{font-style:normal;color:var(--red)}
+.st-lead{font-size:17px;line-height:1.66;color:var(--muted);max-width:520px;margin:0 0 34px}
+.st-lead b{color:var(--txt);font-weight:600}
+.st-cta{display:flex;flex-wrap:wrap;gap:13px;margin-bottom:32px}
+.st-btn{display:inline-flex;align-items:center;gap:9px;padding:15px 27px;
+  border-radius:var(--r-sm);font-size:13.5px;font-weight:800;letter-spacing:1.3px;
+  cursor:pointer;border:none;transition:.16s;text-decoration:none}
+.st-btn-p{background:var(--red-deep);color:#fff}
+.st-btn-p:hover{background:var(--red);transform:translateY(-1px);
+  box-shadow:0 10px 30px rgba(224,36,63,.3)}
+.st-btn-s{background:transparent;color:var(--txt);border:1px solid var(--border)}
+.st-btn-s:hover{border-color:var(--red);color:var(--red)}
+.st-trust{display:flex;flex-wrap:wrap;gap:9px 22px;font-size:12px;color:var(--faint)}
+.st-trust span{display:inline-flex;align-items:center;gap:7px}
+.st-trust b{color:var(--muted);font-weight:600}
+
+/* fenetre applicative */
+.st-shot{position:relative}
+.st-shot::after{content:"";position:absolute;inset:-9% -5% -14%;z-index:0;
+  background:radial-gradient(closest-side,rgba(224,36,63,.16),transparent 70%)}
+.st-win{position:relative;z-index:1;border-radius:var(--r-lg);overflow:hidden;
+  border:1px solid var(--border);background:var(--panel);
+  box-shadow:0 34px 90px rgba(0,0,0,.7),0 0 0 1px rgba(224,36,63,.08)}
+.st-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;
+  background:var(--panel2);border-bottom:1px solid var(--border)}
+.st-dot{width:10px;height:10px;border-radius:50%;background:#2a2530}
+.st-dot.r{background:var(--red-deep)}
+.st-bar-t{margin-left:8px;font-size:10.5px;letter-spacing:2.4px;
+  color:var(--faint);font-weight:700}
+.st-win img{display:block;width:100%;height:auto}
+
+/* ═══════════ Comment ca marche ═══════════ */
+.st-how{padding:92px 0;border-top:1px solid var(--border)}
+.st-how-in{max-width:1140px;margin:0 auto;padding:0 34px}
+.st-how-h{text-align:center;margin-bottom:58px}
+.st-how-h h2{font-size:clamp(28px,3.4vw,41px);font-weight:900;letter-spacing:-1px;margin:0 0 13px}
+.st-how-h p{color:var(--muted);font-size:15.5px;max-width:600px;margin:0 auto;line-height:1.65}
+.st-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.st-step{position:relative;padding:32px 26px 28px;border-radius:var(--r-md);
+  background:var(--panel);border:1px solid var(--border);transition:.18s}
+.st-step:hover{border-color:var(--border-red);transform:translateY(-3px)}
+.st-step-n{font-size:11px;font-weight:900;letter-spacing:2.6px;color:var(--red);margin-bottom:15px}
+.st-step h3{font-size:17.5px;font-weight:800;margin:0 0 11px;letter-spacing:-.3px}
+.st-step p{font-size:14px;line-height:1.68;color:var(--muted);margin:0}
+.st-note{margin-top:34px;text-align:center;font-size:13px;color:var(--faint)}
+.st-note a{color:var(--red);text-decoration:none;font-weight:600}
+
+@media(max-width:940px){
+  .st-wrap{grid-template-columns:1fr;gap:48px}
+  .st-hero{padding:78px 0 62px}
+  .st-lead{max-width:none}
+  .st-steps{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
@@ -394,41 +465,74 @@ code{background:var(--bg);padding:1px 7px;border-radius:4px;font-size:12px;color
 <div class="pg" id="pg-home">
 
   <!-- HERO -->
-  <section class="hero">
-    <div class="hero-blob"></div>
-    <div class="hero-inner hero-inner-centered">
+  <!-- ═══ HERO — X-AIM STUDIO ═══ -->
+  <section class="st-hero">
+    <div class="st-wrap">
+
       <div>
-        <div class="eyebrow">PREMIUM REWASD CONFIGS</div>
-        <h1 class="hero-h1">X-<em>AIM</em></h1>
-        <p class="hero-sub">Optimized, tested configs ready to use so you can take the edge in-game.</p>
-        <div class="hero-cta">
-          <button class="btn-red" onclick="go('pricing')">
-            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-            BUY NOW
-          </button>
-          <a class="btn-outline" href="javascript:void(0)" onclick="go('pricing')">
-            VIEW PRODUCT
-            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-          </a>
+        <div class="st-eyebrow"><i></i>THE REWASD CONFIG BUILDER</div>
+        <h1 class="st-h1">X-AIM <em>STUDIO</em></h1>
+        <p class="st-lead">
+          Stop hunting for someone else's profile. Tell X-AIM Studio your mouse,
+          your in-game sensitivity and how you play — it <b>solves your response
+          curve</b> and writes it straight into reWASD.
+        </p>
+        <div class="st-cta">
+          <button class="st-btn st-btn-p" onclick="go('pricing')">GET X-AIM — $29.99</button>
+          <a class="st-btn st-btn-s" href="javascript:void(0)" onclick="goAnchor('how')">SEE HOW IT WORKS</a>
         </div>
-        <div class="hero-stats">
-          <div class="hstat">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            <div><b>+500</b><span>Happy customers</span></div>
-          </div>
-          <div class="hstat">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            <div><b>Fast</b><span>setup</span></div>
-          </div>
-          <div class="hstat">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <div><b>Secure</b><span>payment</span></div>
-          </div>
-          <div class="hstat">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
-            <div><b>Discord support</b><span>24/7</span></div>
-          </div>
+        <div class="st-trust">
+          <span><b>One-time payment</b> — no subscription</span>
+          <span><b>Instant delivery</b> — key by email</span>
+          <span><b>Windows 10 / 11</b></span>
         </div>
+      </div>
+
+      <div class="st-shot">
+        <div class="st-win">
+          <div class="st-bar">
+            <span class="st-dot r"></span><span class="st-dot"></span><span class="st-dot"></span>
+            <span class="st-bar-t">X-AIM STUDIO</span>
+          </div>
+          <img src="assets/studio.png" alt="X-AIM Studio generating a custom reWASD response curve"
+               width="1120" height="1023" loading="eager" decoding="async">
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══ COMMENT CA MARCHE ═══ -->
+  <section class="st-how" id="how">
+    <div class="st-how-in">
+      <div class="st-how-h">
+        <h2>Built for <em style="color:var(--red);font-style:normal">your</em> hardware</h2>
+        <p>Every mouse, every sensitivity and every play style needs a different curve.
+           A shared profile is always a compromise. X-AIM Studio computes yours.</p>
+      </div>
+      <div class="st-steps">
+        <div class="st-step">
+          <div class="st-step-n">STEP 01</div>
+          <h3>Describe your setup</h3>
+          <p>Your DPI, your in-game Fortnite sensitivity, and the style you play —
+             aggressive, neutral or stable. Three questions, nothing technical.</p>
+        </div>
+        <div class="st-step">
+          <div class="st-step-n">STEP 02</div>
+          <h3>It solves your curve</h3>
+          <p>An optimiser searches for the smoothest response curve that still clears
+             the game deadzone and reaches full deflection. You watch it draw on screen.</p>
+        </div>
+        <div class="st-step">
+          <div class="st-step-n">STEP 03</div>
+          <h3>One click to apply</h3>
+          <p>The profile is written into reWASD for you, ADS layer included.
+             After the first setup you never open reWASD again.</p>
+        </div>
+      </div>
+      <div class="st-note">
+        Requires <a href="https://www.rewasd.com/download" target="_blank" rel="noopener">reWASD</a>
+        — third-party software, paid and sold separately.
       </div>
     </div>
   </section>
